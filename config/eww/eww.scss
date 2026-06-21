@@ -1,0 +1,98 @@
+// EVA-SHELL — eww.scss
+// MAGI Diagnostics Panel Styles
+// Variables injected by apply-theme.sh via _theme.scss
+
+@import "theme";
+
+* {
+  all: unset;
+  font-family: $font;
+  font-size: $font-size;
+  color: $fg;
+  box-sizing: border-box;
+}
+
+.magi-panel {
+  background-color: $bg-panel;
+  border: 1px solid $border;
+  border-left: 2px solid $border-act;
+  padding: 10px 8px;
+  min-height: 400px;
+}
+
+.magi-title {
+  font-size: 11px;
+  font-weight: bold;
+  color: $green;
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+}
+
+.magi-subtitle {
+  font-size: 7px;
+  color: $fg-dim;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.magi-block {
+  padding: 6px 4px;
+  border-left: 2px solid $border;
+
+  &:nth-child(3) { border-left-color: $melchior;   }
+  &:nth-child(5) { border-left-color: $balthasar;  }
+  &:nth-child(7) { border-left-color: $caspar;     }
+}
+
+.magi-label {
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: $fg;
+  margin-bottom: 2px;
+}
+
+.magi-metric {
+  font-size: 7px;
+  color: $fg-dim;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.magi-bar {
+  // eww scale widget
+  min-height: 6px;
+  margin-bottom: 4px;
+
+  trough {
+    background-color: $bg;
+    border: 1px solid $border;
+    border-radius: 0;
+    min-height: 6px;
+  }
+
+  highlight,
+  progress {
+    background-color: $green;
+    border-radius: 0;
+  }
+}
+
+.magi-value {
+  font-size: 13px;
+  font-weight: bold;
+  // color set inline per-block via :style
+}
+
+.magi-divider {
+  background-color: $border;
+  min-height: 1px;
+  margin: 4px 0;
+}
+
+.magi-uptime {
+  font-size: 8px;
+  color: $fg-dim;
+  margin-top: 6px;
+  letter-spacing: 1px;
+}

@@ -1,0 +1,102 @@
+; ============================================================
+; EVA-SHELL — eww.yuck
+; Phase 6: MAGI Diagnostics Widget
+; ============================================================
+
+; ============================================================
+; VARIABLES — polled from magi-stats.sh every 2s
+; ============================================================
+(defpoll magi_data
+  :interval "2s"
+  :initial "{}"
+  `~/.config/eva-shell/scripts/magi-stats.sh`)
+
+; Helpers to extract from JSON
+(defvar magi_cpu_val    0)
+(defvar magi_ram_val    0)
+(defvar magi_temp_val   "?")
+(defvar magi_cpu_color  "#00ccff")
+(defvar magi_ram_color  "#ff6600")
+(defvar magi_temp_color "#00ff88")
+
+; ============================================================
+; WIDGETS
+; ============================================================
+
+; Single MAGI block
+(defwidget magi-block [label metric value unit color]
+  (box :class "magi-block"
+       :orientation "vertical"
+       :spacing 4
+    (label :class "magi-label"
+           :text label)
+    (label :class "magi-metric"
+           :text metric)
+    (scale  :class "magi-bar"
+            :value value
+            :min 0
+            :max 100
+            :active false)
+    (label  :class "magi-value"
+            :style "color: ${color};"
+            :text "${value}${unit}")))
+
+; Full MAGI panel
+(defwidget magi-panel []
+  (box :class "magi-panel"
+       :orientation "vertical"
+       :spacing 8
+    (label :class "magi-title"
+           :text "MAGI DIAGNOSTICS")
+    (label :class "magi-subtitle"
+           :text "INTERCEPT-ALPHA // LINK-BETA")
+
+    ; MELCHIOR — CPU
+    (magi-block
+      :label   "MELCHIOR"
+      :metric  "CPU_LOAD"
+      :value   {jq(magi_data, '.melchior.value') ?: 0}
+      :unit    {jq(magi_data, '.melchior.unit')  ?: "%"}
+      :color   {jq(magi_data, '.melchior.color') ?: "#00ccff"})
+
+    (box :class "magi-divider" :height 1)
+
+    ; BALTHASAR — RAM
+    (magi-block
+      :label   "BALTHASAR"
+      :metric  "MEM_ALLOC"
+      :value   {jq(magi_data, '.balthasar.value') ?: 0}
+      :unit    {jq(magi_data, '.balthasar.unit')  ?: "%"}
+      :color   {jq(magi_data, '.balthasar.color') ?: "#ff6600"})
+
+    (box :class "magi-divider" :height 1)
+
+    ; CASPAR — TEMP
+    (magi-block
+      :label   "CASPAR"
+      :metric  "CORE_TEMP"
+      :value   {jq(magi_data, '.caspar.value')  ?: "?"}
+      :unit    {jq(magi_data, '.caspar.unit')   ?: "°C"}
+      :color   {jq(magi_data, '.caspar.color')  ?: "#00ff88"})
+
+    (box :class "magi-divider" :height 1)
+
+    ; UPTIME
+    (label :class "magi-uptime"
+           :text "UP: ${jq(magi_data, '.uptime') ?: '--'}")))
+
+; ============================================================
+; WINDOWS
+; ============================================================
+(defwindow magi-panel
+  :monitor 0
+  :geometry (geometry
+    :x      "1640px"
+    :y      "568px"
+    :width  "280px"
+    :height "432px"
+    :anchor "top left")
+  :stacking "fg"
+  :focusable false
+  :namespace "eva-magi"
+  (magi-panel))

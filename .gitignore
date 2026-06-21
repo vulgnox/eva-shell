@@ -1,0 +1,22 @@
+# EVA-SHELL .gitignore
+
+# Generated theme files (rebuilt by apply-theme.sh)
+config/i3/colors.conf
+config/polybar/colors.ini
+config/eww/_theme.scss
+config/kitty/kitty.conf
+config/rofi/eva.rasi
+
+# Runtime / temp
+.active-theme
+*.log
+*.pid
+/tmp/
+
+# Sounds (binary — store separately or add instructions)
+themes/*/sounds/*.wav
+themes/*/sounds/*.mp3
+themes/*/sounds/*.ogg
+
+# User-specific
+.DS_Store
