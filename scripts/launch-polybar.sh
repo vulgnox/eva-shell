@@ -12,7 +12,7 @@ sleep 0.3
 # Wait for i3 to be ready
 while ! pgrep -x i3 > /dev/null; do sleep 0.1; done
 
-# Launch top bar
+# Launch top bar (use config from eva-shell directory)
 polybar eva-top --config="$HOME/.config/eva-shell/config/polybar/config.ini" &
 
-echo "Polybar launched"
+echo "[EVA] Polybar launched"
