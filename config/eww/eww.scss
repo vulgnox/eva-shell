@@ -24,24 +24,19 @@ $dead:       #1a2a10;
 $font:       "JetBrains Mono";
 
 // ============================================================
-// GLOBAL
+// GLOBAL — force black background on everything
 // ============================================================
-* {
-  background-color: transparent;
+window, window * {
+  background-color: $bg;
   background-image: none;
+  font-family: $font, monospace;
+  font-size: 10px;
+  color: $orange;
   border: none;
   border-radius: 0;
   box-shadow: none;
   margin: 0;
   padding: 0;
-  font-family: $font, monospace;
-  font-size: 10px;
-  color: $orange;
-}
-
-window {
-  background-color: $bg;
-  color: $orange;
 }
 
 // ============================================================
@@ -172,12 +167,12 @@ window {
   min-width: 8px;
   min-height: 8px;
   border-radius: 50%;
-  background: $green;
+  background-color: $green;
 }
 
-.mel-dot { background: $green; }
-.bal-dot { background: $green; }
-.cas-dot { background: $green; }
+.mel-dot { background-color: $green; }
+.bal-dot { background-color: $green; }
+.cas-dot { background-color: $green; }
 
 .consensus-label {
   font-size: 8px;
@@ -218,21 +213,21 @@ window {
 .unit-bar {
   min-height: 4px;
   margin: 3px 0;
-  background: #0a0a0a;
+  background-color: #0a0a0a;
   border: 1px solid $border-grn;
   border-radius: 0;
 
   trough {
     min-height: 4px;
-    background: #0a0a0a;
+    background-color: #0a0a0a;
     border-radius: 0;
   }
   highlight {
     border-radius: 0;
   }
-  &.mel-bar highlight { background: $blue; }
-  &.bal-bar highlight { background: $orange; }
-  &.cas-bar highlight { background: $teal; }
+  &.mel-bar highlight { background-color: $blue; }
+  &.bal-bar highlight { background-color: $orange; }
+  &.cas-bar highlight { background-color: $teal; }
 }
 
 .unit-val {
@@ -248,7 +243,7 @@ window {
   border: 2px solid $orange;
   padding: 8px 12px;
   min-width: 60px;
-  background: #050500;
+  background-color: #050500;
 }
 
 .diamond-text {
@@ -318,20 +313,20 @@ window {
 
 .net-bar {
   min-height: 4px;
-  background: #0a0a0a;
+  background-color: #0a0a0a;
   border: 1px solid $border-grn;
   border-radius: 0;
 
   trough {
     min-height: 4px;
-    background: #0a0a0a;
+    background-color: #0a0a0a;
     border-radius: 0;
   }
   highlight {
     border-radius: 0;
   }
-  &.rx-bar highlight { background: $teal; }
-  &.tx-bar highlight { background: $teal-hi; }
+  &.rx-bar highlight { background-color: $teal; }
+  &.tx-bar highlight { background-color: $teal-hi; }
 }
 
 .net-val {
@@ -362,21 +357,21 @@ window {
 
 .diag-bar {
   min-height: 3px;
-  background: #0a0a0a;
+  background-color: #0a0a0a;
   border: 1px solid $border-grn;
   border-radius: 0;
 
   trough {
     min-height: 3px;
-    background: #0a0a0a;
+    background-color: #0a0a0a;
     border-radius: 0;
   }
   highlight {
     border-radius: 0;
   }
-  &.mel-bar highlight { background: $blue; }
-  &.bal-bar highlight { background: $orange; }
-  &.cas-bar highlight { background: $teal; }
+  &.mel-bar highlight { background-color: $blue; }
+  &.bal-bar highlight { background-color: $orange; }
+  &.cas-bar highlight { background-color: $teal; }
 }
 
 .diag-val {
@@ -397,9 +392,9 @@ window {
   min-width: 6px;
   min-height: 6px;
   border-radius: 50%;
-  &.on   { background: $green; }
-  &.off  { background: $dead; }
-  &.warn { background: $yellow; }
+  &.on   { background-color: $green; }
+  &.off  { background-color: $dead; }
+  &.warn { background-color: $yellow; }
 }
 
 .ctrl-label {

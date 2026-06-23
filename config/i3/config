@@ -29,12 +29,14 @@ hide_edge_borders both
 # This ensures tiled windows NEVER overlap the HUD
 # ============================================================
 # Layout (1920x1080):
-#   Polybar top:     24px   (handled by polybar bar reservation)
-#   MAGI center-top: 180px  (eww window below polybar)
+#   Polybar top:     24px   (override-redirect, i3 unaware)
+#   MAGI center-top: 180px  (eww window below polybar, y=24 to y=204)
 #   Left flank:      280px  (eww panel)
 #   Right flank:     280px  (eww panel)
 #   Bottom strip:    180px  (eww panel)
 #
+# gaps top must be 204 (24px polybar + 180px magi-center)
+# so tiled windows start at y=204 and never overlap the MAGI panel.
 # Tiling workspace area: (280, 204) -> (1640, 900) = 1360x696px
 
 gaps inner 0
@@ -42,7 +44,7 @@ gaps outer 0
 gaps left 280
 gaps right 280
 gaps bottom 180
-gaps top 180
+gaps top 204
 
 # ============================================================
 # STARTUP — autostart on session begin
