@@ -30,13 +30,18 @@ $font:       "JetBrains Mono";
   all: unset;
   font-family: $font, monospace;
   font-size: 10px;
+  color: $orange;
+}
+
+window {
+  background-color: $bg;
 }
 
 // ============================================================
 // PANEL BASE
 // ============================================================
 .panel {
-  background: $bg;
+  background-color: $bg;
   color: $orange;
 }
 
