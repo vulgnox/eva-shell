@@ -83,7 +83,7 @@ exec --no-startup-id kitty --class eva-bottom-kbd \
     -e ~/.config/eva-shell/scripts/kbd-sensor.sh
 
 # eww MAGI widget
-exec --no-startup-id eww daemon && eww open magi-panel
+exec --no-startup-id ~/.config/eva-shell/scripts/launch-eww.sh
 
 # Central canvas — default terminal
 exec --no-startup-id kitty --class eva-center \

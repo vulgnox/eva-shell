@@ -86,9 +86,9 @@ To create your own theme, duplicate the `themes/eva-01/` folder and edit.
 ## PHASES (BUILD LOG)
 
 - [x] Phase 0 — Repo & architecture
-- [ ] Phase 1 — Base installation
-- [ ] Phase 2 — Theme engine
-- [ ] Phase 3 — Layout skeleton
+- [x] Phase 1 — Base installation
+- [x] Phase 2 — Theme engine
+- [x] Phase 3 — Layout skeleton
 - [ ] Phase 4 — Boot sequence
 - [ ] Phase 5 — Left flank (logs + process tree)
 - [ ] Phase 6 — Right flank (ASCII loop + MAGI)
