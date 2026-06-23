@@ -49,11 +49,10 @@ gaps outer 0
 gaps top 24
 gaps left 280
 gaps right 280
-smart_gaps off
 
 # NOTE: gaps bottom is NOT set here because the eww bottom-panel
 # uses :reserve (struts) + :windowtype "dock" which tells i3
-# to reserve that space. Setting both would double the reservation.
+# to reserve that space automatically.
 
 # ============================================================
 # STARTUP — autostart on session begin
