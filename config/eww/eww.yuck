@@ -250,7 +250,6 @@ Win+f      fullscreen"))))
     :anchor "top left")
   :stacking "fg"
   :focusable false
-  :reserve (struts :distance "280px" :side "left")
   :namespace "eva-left-panel"
   (left-panel-widget))
 
@@ -266,7 +265,6 @@ Win+f      fullscreen"))))
     :anchor "top right")
   :stacking "fg"
   :focusable false
-  :reserve (struts :distance "280px" :side "right")
   :namespace "eva-right-panel"
   (right-panel-widget))
 
@@ -281,5 +279,6 @@ Win+f      fullscreen"))))
   :stacking "fg"
   :focusable false
   :reserve (struts :distance "120px" :side "bottom")
+  :windowtype "dock"
   :namespace "eva-bottom-panel"
   (bottom-panel-widget))

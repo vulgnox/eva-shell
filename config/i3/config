@@ -47,11 +47,13 @@ default_orientation vertical
 gaps inner 0
 gaps outer 0
 gaps top 24
-gaps bottom 120
 gaps left 280
 gaps right 280
 smart_gaps off
-smart_borders off
+
+# NOTE: gaps bottom is NOT set here because the eww bottom-panel
+# uses :reserve (struts) + :windowtype "dock" which tells i3
+# to reserve that space. Setting both would double the reservation.
 
 # ============================================================
 # STARTUP — autostart on session begin
