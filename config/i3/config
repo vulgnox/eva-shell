@@ -29,21 +29,26 @@ default_orientation vertical
 # GAPS — Reserve screen edges for eww HUD panels
 # This ensures tiled windows NEVER overlap the HUD
 # ============================================================
-# Layout (1920x1080):
-#   Polybar top:     24px   (override-redirect, not managed by i3)
-#   Left flank:      280px  (eww panel)
-#   Right flank:     280px  (eww panel)
-#   Bottom strip:    120px  (eww panel)
+# Screen: 1920x1080
+# Polybar:       y=0..24         (24px, override-redirect)
+# Left eww:      x=0..280       (280px)
+# Right eww:     x=1640..1920   (280px)
+# Bottom eww:    y=990..1080    (90px, anchored bottom)
 #
-# Center workspace: MAGI TUI (top tile) + terminal (bottom tile)
-# managed by i3 tiling — no eww overlay in center
-# Tiling area: (280, 24) -> (1640, 960) = 1360x936px
+# i3 gaps push tiled windows INWARD from screen edges:
+#   top 24   → tiles start at y=24  (below polybar)
+#   bottom 120 → tiles end at y=960  (30px above bottom panel)
+#   left 280  → tiles start at x=280
+#   right 280 → tiles end at x=1640
+#
+# Tiling area: (280, 24) to (1640, 960) = 1360x936px
+# Gap between tiling and bottom panel: 30px (960 to 990)
 
 gaps inner 0
 gaps outer 0
 gaps left 280
 gaps right 280
-gaps bottom 100
+gaps bottom 120
 gaps top 24
 
 # ============================================================
