@@ -264,25 +264,25 @@ Win+f      fullscreen"))))
   :namespace "eva-magi-center"
   (magi-center-widget))
 
-; RIGHT PANEL — (1640, 24) 280x876
+; RIGHT PANEL — anchored top-right, below polybar
 (defwindow right-panel
   :monitor 0
   :geometry (geometry
-    :x "1640px" :y "24px"
+    :x "0px" :y "24px"
     :width "280px" :height "876px"
-    :anchor "top left")
+    :anchor "top right")
   :stacking "fg"
   :focusable false
   :namespace "eva-right-panel"
   (right-panel-widget))
 
-; BOTTOM PANEL — (0, 900) 1920x180
+; BOTTOM PANEL — anchored to bottom of screen, 1920x180
 (defwindow bottom-panel
   :monitor 0
   :geometry (geometry
-    :x "0px" :y "900px"
+    :x "0px" :y "0px"
     :width "1920px" :height "180px"
-    :anchor "top left")
+    :anchor "bottom left")
   :stacking "fg"
   :focusable false
   :namespace "eva-bottom-panel"
