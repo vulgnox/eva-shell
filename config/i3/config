@@ -45,10 +45,13 @@ default_orientation vertical
 # Gap between tiling and bottom panel: 30px (960 to 990)
 
 gaps inner 0
+gaps outer 0
 gaps top 24
 gaps bottom 120
 gaps left 280
 gaps right 280
+smart_gaps off
+smart_borders off
 
 # ============================================================
 # STARTUP — autostart on session begin

@@ -250,6 +250,7 @@ Win+f      fullscreen"))))
     :anchor "top left")
   :stacking "fg"
   :focusable false
+  :reserve (struts :distance "280px" :side "left")
   :namespace "eva-left-panel"
   (left-panel-widget))
 
@@ -265,11 +266,12 @@ Win+f      fullscreen"))))
     :anchor "top right")
   :stacking "fg"
   :focusable false
+  :reserve (struts :distance "280px" :side "right")
   :namespace "eva-right-panel"
   (right-panel-widget))
 
 ; BOTTOM PANEL — anchored to bottom of screen, 1920x90
-; Positioned at y=990..1080 (30px below tiling area which ends at y=960)
+; :reserve tells WM to reserve space (like a dock/taskbar)
 (defwindow bottom-panel
   :monitor 0
   :geometry (geometry
@@ -278,5 +280,6 @@ Win+f      fullscreen"))))
     :anchor "bottom left")
   :stacking "fg"
   :focusable false
+  :reserve (struts :distance "120px" :side "bottom")
   :namespace "eva-bottom-panel"
   (bottom-panel-widget))
