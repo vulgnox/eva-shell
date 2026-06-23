@@ -23,6 +23,7 @@ include ~/.config/eva-shell/config/i3/colors.conf
 default_border pixel 1
 default_floating_border pixel 1
 hide_edge_borders both
+default_orientation vertical
 
 # ============================================================
 # GAPS — Reserve screen edges for eww HUD panels
