@@ -29,9 +29,8 @@ sleep 0.5
 "$EWW_BIN" daemon --config "$EWW_CONFIG" 2>/dev/null &
 sleep 1.5
 
-# Open all HUD panels
+# Open HUD panels (left, right, bottom — magi-center is now a tiling terminal)
 "$EWW_BIN" open left-panel   --config "$EWW_CONFIG" 2>&1
-"$EWW_BIN" open magi-center  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open right-panel  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open bottom-panel --config "$EWW_CONFIG" 2>&1
 

@@ -240,48 +240,40 @@ Win+f      fullscreen"))))
 ; WINDOW DEFINITIONS
 ; ============================================================
 
-; LEFT PANEL — (0, 24) 280x876
+; LEFT PANEL — from polybar (24px) to bottom panel (120px from bottom)
+; Height = 1080 - 24 - 120 = 936px
 (defwindow left-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "24px"
-    :width "280px" :height "876px"
+    :width "280px" :height "936px"
     :anchor "top left")
   :stacking "fg"
   :focusable false
   :namespace "eva-left-panel"
   (left-panel-widget))
 
-; MAGI CENTER — (280, 24) 1360x180
-(defwindow magi-center
-  :monitor 0
-  :geometry (geometry
-    :x "280px" :y "24px"
-    :width "1360px" :height "180px"
-    :anchor "top left")
-  :stacking "fg"
-  :focusable false
-  :namespace "eva-magi-center"
-  (magi-center-widget))
+; MAGI CENTER removed — now runs as a tiling kitty terminal in i3
 
 ; RIGHT PANEL — anchored top-right, below polybar
+; Height = 1080 - 24 - 120 = 936px
 (defwindow right-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "24px"
-    :width "280px" :height "876px"
+    :width "280px" :height "936px"
     :anchor "top right")
   :stacking "fg"
   :focusable false
   :namespace "eva-right-panel"
   (right-panel-widget))
 
-; BOTTOM PANEL — anchored to bottom of screen, 1920x180
+; BOTTOM PANEL — anchored to bottom of screen, 1920x120
 (defwindow bottom-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "0px"
-    :width "1920px" :height "180px"
+    :width "1920px" :height "120px"
     :anchor "bottom left")
   :stacking "fg"
   :focusable false

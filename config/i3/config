@@ -29,22 +29,21 @@ hide_edge_borders both
 # This ensures tiled windows NEVER overlap the HUD
 # ============================================================
 # Layout (1920x1080):
-#   Polybar top:     24px   (override-redirect, i3 unaware)
-#   MAGI center-top: 180px  (eww window below polybar, y=24 to y=204)
+#   Polybar top:     24px   (override-redirect, not managed by i3)
 #   Left flank:      280px  (eww panel)
 #   Right flank:     280px  (eww panel)
-#   Bottom strip:    180px  (eww panel)
+#   Bottom strip:    120px  (eww panel)
 #
-# gaps top must be 204 (24px polybar + 180px magi-center)
-# so tiled windows start at y=204 and never overlap the MAGI panel.
-# Tiling workspace area: (280, 204) -> (1640, 900) = 1360x696px
+# Center workspace: MAGI TUI (top tile) + terminal (bottom tile)
+# managed by i3 tiling — no eww overlay in center
+# Tiling area: (280, 24) -> (1640, 960) = 1360x936px
 
 gaps inner 0
 gaps outer 0
 gaps left 280
 gaps right 280
-gaps bottom 180
-gaps top 204
+gaps bottom 120
+gaps top 24
 
 # ============================================================
 # STARTUP — autostart on session begin
@@ -65,18 +64,24 @@ exec_always --no-startup-id ~/.config/eva-shell/scripts/launch-eww.sh
 # Set wallpaper (pure black)
 exec_always --no-startup-id xsetroot -solid "#000000"
 
-# Central canvas — default terminal (opens in tiling workspace)
-exec --no-startup-id kitty --class eva-center --title "CENTRAL_TERM"
+# MAGI TUI — top tile in workspace 1 (system dashboard)
+exec --no-startup-id kitty --class eva-magi-tui --title "MAGI_SYSTEM" ~/.config/eva-shell/scripts/magi-tui.sh
+
+# Central canvas — working terminal (bottom tile in workspace 1)
+exec --no-startup-id bash -c 'sleep 1.5 && kitty --class eva-center --title "CENTRAL_TERM"'
 
 # ============================================================
 # WINDOW RULES
 # ============================================================
 
+# MAGI TUI — tiling, takes ~40% of vertical space in center
+for_window [class="eva-magi-tui"] floating disable, border pixel 1
+for_window [class="eva-magi-tui"] resize set height 350 px
+
 # Central canvas — always tiling, never float
 for_window [class="eva-center"] floating disable
 
 # eww windows — let eww manage its own positioning
-for_window [class="eva-magi.*"]     floating enable, border none
 for_window [class="eva-left.*"]     floating enable, border none
 for_window [class="eva-right.*"]    floating enable, border none
 for_window [class="eva-bottom.*"]   floating enable, border none
