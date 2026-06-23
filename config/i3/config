@@ -1,6 +1,8 @@
 # ============================================================
 # EVA-SHELL — i3 config
-# Phase 3: Layout Skeleton
+# Layout: gaps-based HUD with clean center workspace
+# eww handles all HUD panels (left, right, center-top, bottom)
+# No floating terminals in HUD areas — zero overlap
 # ============================================================
 
 set $mod Mod4
@@ -21,24 +23,26 @@ include ~/.config/eva-shell/config/i3/colors.conf
 default_border pixel 1
 default_floating_border pixel 1
 hide_edge_borders both
+
+# ============================================================
+# GAPS — Reserve screen edges for eww HUD panels
+# This ensures tiled windows NEVER overlap the HUD
+# ============================================================
+# Layout (1920x1080):
+#   Polybar top:     24px   (handled by polybar bar reservation)
+#   MAGI center-top: 180px  (eww window below polybar)
+#   Left flank:      280px  (eww panel)
+#   Right flank:     280px  (eww panel)
+#   Bottom strip:    180px  (eww panel)
+#
+# Tiling workspace area: (280, 204) -> (1640, 900) = 1360x696px
+
 gaps inner 0
 gaps outer 0
-
-# ============================================================
-# LAYOUT ENGINE CORE
-# ============================================================
-
-# Left flank — sticky, 280px wide
-# Assigned containers: system logs + process tree
-set $left_width 280
-
-# Right flank — sticky, 280px wide
-# Assigned containers: ascii loop + MAGI
-set $right_width 280
-
-# Bottom flank — sticky, 180px tall
-# Assigned containers: ranger + keyboard sensor + controls
-set $bottom_height 180
+gaps left 280
+gaps right 280
+gaps bottom 180
+gaps top 180
 
 # ============================================================
 # STARTUP — autostart on session begin
@@ -53,94 +57,28 @@ exec --no-startup-id ~/.config/eva-shell/scripts/boot-sequence.sh
 # Polybar
 exec_always --no-startup-id ~/.config/eva-shell/scripts/launch-polybar.sh
 
+# eww HUD panels (all 4 windows)
+exec_always --no-startup-id ~/.config/eva-shell/scripts/launch-eww.sh
+
 # Set wallpaper (pure black)
-exec_always --no-startup-id feh --bg-fill ~/.config/eva-shell/themes/eva-01/assets/wallpaper.png 2>/dev/null \
-    || xsetroot -solid "#050508"
+exec_always --no-startup-id xsetroot -solid "#000000"
 
-# Left flank — system logs
-exec --no-startup-id kitty --class eva-left-logs \
-    --title "SYS_LOG_STREAM" \
-    -e ~/.config/eva-shell/scripts/log-stream.sh
-
-# Left flank — process tree
-exec --no-startup-id kitty --class eva-left-procs \
-    --title "PROCESS_TREE" \
-    -e btop
-
-# Right flank — ASCII loop
-exec --no-startup-id kitty --class eva-right-ascii \
-    --title "ASCII_LOOP" \
-    -e ~/.config/eva-shell/scripts/ascii-loop.sh
-
-# Bottom flank — ranger
-exec --no-startup-id kitty --class eva-bottom-ranger \
-    --title "HOME_DIRECTORY" \
-    -e ranger
-
-# Bottom flank — keyboard sensor
-exec --no-startup-id kitty --class eva-bottom-kbd \
-    --title "KEYBOARD_SENSOR" \
-    -e ~/.config/eva-shell/scripts/kbd-sensor.sh
-
-# eww MAGI widget
-exec --no-startup-id ~/.config/eva-shell/scripts/launch-eww.sh
-
-# Central canvas — default terminal
-exec --no-startup-id kitty --class eva-center \
-    --title "CENTRAL_TERM"
+# Central canvas — default terminal (opens in tiling workspace)
+exec --no-startup-id kitty --class eva-center --title "CENTRAL_TERM"
 
 # ============================================================
-# WINDOW ASSIGNMENTS
-# Sticky panel windows are assigned to scratchpad-like behavior
-# using marks + sticky flags
+# WINDOW RULES
 # ============================================================
 
-# Left flank containers
-for_window [class="eva-left-logs"]  sticky enable
-for_window [class="eva-left-logs"]  floating enable
-for_window [class="eva-left-logs"]  resize set $left_width 880
-for_window [class="eva-left-logs"]  move position 0 24
-for_window [class="eva-left-logs"]  border pixel 1
-
-for_window [class="eva-left-procs"] sticky enable
-for_window [class="eva-left-procs"] floating enable
-for_window [class="eva-left-procs"] resize set $left_width 300
-for_window [class="eva-left-procs"] move position 0 904
-for_window [class="eva-left-procs"] border pixel 1
-
-# Right flank containers
-for_window [class="eva-right-ascii"] sticky enable
-for_window [class="eva-right-ascii"] floating enable
-for_window [class="eva-right-ascii"] resize set $right_width 540
-for_window [class="eva-right-ascii"] move position 1640 24
-for_window [class="eva-right-ascii"] border pixel 1
-
-# eww MAGI panel (right bottom)
-# eww handles its own positioning via eww.yuck geometry
-
-# Bottom flank — ranger
-for_window [class="eva-bottom-ranger"] sticky enable
-for_window [class="eva-bottom-ranger"] floating enable
-for_window [class="eva-bottom-ranger"] resize set 560 $bottom_height
-for_window [class="eva-bottom-ranger"] move position 0 900
-for_window [class="eva-bottom-ranger"] border pixel 1
-
-# Bottom flank — keyboard sensor
-for_window [class="eva-bottom-kbd"] sticky enable
-for_window [class="eva-bottom-kbd"] floating enable
-for_window [class="eva-bottom-kbd"] resize set 400 $bottom_height
-for_window [class="eva-bottom-kbd"] move position 560 900
-for_window [class="eva-bottom-kbd"] border pixel 1
-
-# All HUD windows stay on every workspace
-for_window [class="eva-left-logs"]    move to workspace current
-for_window [class="eva-left-procs"]   move to workspace current
-for_window [class="eva-right-ascii"]  move to workspace current
-for_window [class="eva-bottom-ranger"] move to workspace current
-for_window [class="eva-bottom-kbd"]   move to workspace current
-
-# Central canvas — all unlisted apps go here (tiling, not floating)
+# Central canvas — always tiling, never float
 for_window [class="eva-center"] floating disable
+
+# eww windows — let eww manage its own positioning
+for_window [class="eva-magi.*"]     floating enable, border none
+for_window [class="eva-left.*"]     floating enable, border none
+for_window [class="eva-right.*"]    floating enable, border none
+for_window [class="eva-bottom.*"]   floating enable, border none
+for_window [class="eva-overlay.*"]  floating enable, border none
 
 # ============================================================
 # WORKSPACES
@@ -196,6 +134,9 @@ bindsym $mod+Shift+e exec i3-nagbar \
 
 # Reload i3 config
 bindsym $mod+Shift+r reload
+
+# Restart i3 in-place
+bindsym $mod+Shift+c restart
 
 # Split direction
 bindsym $mod+h split h
