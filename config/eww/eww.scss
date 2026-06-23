@@ -27,7 +27,13 @@ $font:       "JetBrains Mono";
 // GLOBAL
 // ============================================================
 * {
-  all: unset;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
   font-family: $font, monospace;
   font-size: 10px;
   color: $orange;
@@ -35,6 +41,7 @@ $font:       "JetBrains Mono";
 
 window {
   background-color: $bg;
+  color: $orange;
 }
 
 // ============================================================
@@ -459,22 +466,4 @@ window {
   color: $dim;
 }
 
-// ============================================================
-// SCANLINE OVERLAY (applied via ::after on panels)
-// ============================================================
-.panel::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(96, 240, 160, 0.008) 3px,
-    rgba(96, 240, 160, 0.008) 4px
-  );
-  pointer-events: none;
-}
+// Scanline effect removed — GTK CSS does not support ::after pseudo-elements
