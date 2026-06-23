@@ -1,114 +1,75 @@
 #!/bin/bash
 # ============================================================
 # EVA-SHELL — boot-sequence.sh
-# Phase 4: Immersive Boot Engine
-# Runs once on i3 session start — 3-5 second NERV init
+# NERV MAGI boot — exact show colors
 # ============================================================
-
-# Only run on first login (not on i3 reload)
 BOOT_FLAG="/tmp/.eva-shell-booted"
-if [ -f "$BOOT_FLAG" ]; then
-    exit 0
-fi
+[ -f "$BOOT_FLAG" ] && exit 0
 touch "$BOOT_FLAG"
 
-# Load theme colors
-COLORS="$HOME/.config/eva-shell/themes/$(cat $HOME/.config/eva-shell/.active-theme 2>/dev/null || echo eva-01)/colors.conf"
-[ -f "$COLORS" ] && source "$COLORS"
+OR='\033[38;2;236;116;32m'   # orange #ec7420
+GR='\033[38;2;80;255;16m'    # green  #50ff10
+GD='\033[38;2;64;152;32m'    # green-dim #409820
+TL='\033[38;2;96;240;160m'   # teal  #60f0a0
+BL='\033[38;2;80;144;200m'   # blue  #5090c8
+YL='\033[38;2;244;176;0m'    # yellow #f4b000
+RD='\033[38;2;240;32;32m'    # red   #f02020
+DM='\033[38;2;72;72;72m'     # dim   #484848
+RS='\033[0m'
+BD='\033[1m'
 
-# ============================================================
-# ANSI color helpers (for the boot terminal)
-# ============================================================
-C_GREEN='\033[38;2;0;255;65m'
-C_PURPLE='\033[38;2;107;33;168m'
-C_ORANGE='\033[38;2;255;69;0m'
-C_CYAN='\033[38;2;0;212;255m'
-C_DIM='\033[38;2;74;122;74m'
-C_WHITE='\033[38;2;224;255;224m'
-C_RESET='\033[0m'
-C_BOLD='\033[1m'
-
-# Clear screen
 clear
-
-# Play NERV alert sound (non-blocking)
-SOUND_FILE="$HOME/.config/eva-shell/themes/eva-01/sounds/nerv-alert.wav"
-if [ -f "$SOUND_FILE" ]; then
-    paplay "$SOUND_FILE" &
-fi
-
-# ============================================================
-# BOOT SEQUENCE — cascade text
-# ============================================================
-
-sleep 0.2
+SOUND="$HOME/.config/eva-shell/themes/eva-01/sounds/nerv-alert.wav"
+[ -f "$SOUND" ] && paplay "$SOUND" &
 
 echo ""
+echo -e "${OR}${BD}"
+cat << 'ART'
+  ███╗   ███╗ █████╗  ██████╗ ██╗      ██████╗  ██╗
+  ████╗ ████║██╔══██╗██╔════╝ ██║     ██╔═══██╗███║
+  ██╔████╔██║███████║██║  ███╗██║     ██║   ██║╚██║
+  ██║╚██╔╝██║██╔══██║██║   ██║██║     ██║   ██║ ██║
+  ██║ ╚═╝ ██║██║  ██║╚██████╔╝██║     ╚██████╔╝ ██║
+  ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝      ╚═════╝  ╚═╝
+ART
+echo -e "${RS}"
+echo -e "${DM}  GEHIRN SPECIAL AGENCY — NERV TACTICAL DIVISION${RS}"
+echo -e "${DM}  MAGI SUPERCOMPUTER SYSTEM — INITIALIZATION${RS}"
 echo ""
-echo -e "${C_GREEN}${C_BOLD}"
-echo "  ███╗   ██╗███████╗██████╗ ██╗   ██╗"
-echo "  ████╗  ██║██╔════╝██╔══██╗██║   ██║"
-echo "  ██╔██╗ ██║█████╗  ██████╔╝██║   ██║"
-echo "  ██║╚██╗██║██╔══╝  ██╔══██╗╚██╗ ██╔╝"
-echo "  ██║ ╚████║███████╗██║  ██║ ╚████╔╝ "
-echo "  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝  ╚═══╝  "
-echo -e "${C_RESET}"
-
-echo -e "${C_DIM}  GEHIRN ADVANCED TACTICAL RESEARCH DIVISION${C_RESET}"
-echo -e "${C_DIM}  SPECIAL AGENCY — SECTION 1 CLEARANCE${C_RESET}"
-echo ""
-
 sleep 0.3
 
-# System checks — cascading
 checks=(
-    "${C_GREEN}  [INIT]${C_RESET}    MAGI SYSTEM STARTUP SEQUENCE INITIATED"
-    "${C_GREEN}  [INIT]${C_RESET}    LOADING KERNEL MODULES........... ${C_GREEN}OK${C_RESET}"
-    "${C_CYAN}  [MAGI]${C_RESET}    MELCHIOR-1 ONLINE ............... ${C_GREEN}NOMINAL${C_RESET}"
-    "${C_CYAN}  [MAGI]${C_RESET}    BALTHASAR-2 ONLINE .............. ${C_GREEN}NOMINAL${C_RESET}"
-    "${C_CYAN}  [MAGI]${C_RESET}    CASPAR-3 ONLINE ................. ${C_GREEN}NOMINAL${C_RESET}"
-    "${C_GREEN}  [SYS]${C_RESET}     CONSENSUS REACHED: 3/3 .......... ${C_GREEN}CONFIRMED${C_RESET}"
-    "${C_PURPLE}  [NET]${C_RESET}     NETWORK INTERFACE DETECTED ...... ${C_GREEN}ACTIVE${C_RESET}"
-    "${C_PURPLE}  [NET]${C_RESET}     ENCRYPTION LAYER ................ ${C_GREEN}ENABLED${C_RESET}"
-    "${C_ORANGE}  [SEC]${C_RESET}     PATTERN ANALYSIS ................ ${C_GREEN}STANDBY${C_RESET}"
-    "${C_ORANGE}  [SEC]${C_RESET}     ANGEL DETECTION GRID ............ ${C_GREEN}ARMED${C_RESET}"
-    "${C_GREEN}  [ENV]${C_RESET}     DISPLAY SERVER .................. ${C_GREEN}X11 ACTIVE${C_RESET}"
-    "${C_GREEN}  [ENV]${C_RESET}     COMPOSITOR ...................... ${C_GREEN}PICOM INIT${C_RESET}"
-    "${C_GREEN}  [ENV]${C_RESET}     WINDOW MANAGER .................. ${C_GREEN}i3 LOADED${C_RESET}"
-    "${C_GREEN}  [EVA]${C_RESET}     UNIT-01 INTERFACE ............... ${C_GREEN}SYNCHRONIZED${C_RESET}"
+  "${GR}  [INIT]${RS}  MAGI-01 STARTUP SEQUENCE INITIATED"
+  "${GD}  [SYS ]${RS}  LOADING KERNEL MODULES ............. ${GR}OK${RS}"
+  "${BL}  [MEL ]${RS}  MELCHIOR-1  (CEREBRUM) ONLINE ...... ${GR}NOMINAL${RS}"
+  "${OR}  [BAL ]${RS}  BALTHASAR-2 (CALLOSUM) ONLINE ...... ${GR}NOMINAL${RS}"
+  "${TL}  [CAS ]${RS}  CASPAR-3    (MEDULLA)  ONLINE ...... ${GR}NOMINAL${RS}"
+  "${GR}  [MAGI]${RS}  CONSENSUS REACHED: 3/3 ............. ${GR}CONFIRMED${RS}"
+  "${OR}  [SEC ]${RS}  PATTERN ANALYSIS ................... ${YL}STANDBY${RS}"
+  "${OR}  [SEC ]${RS}  DANANG TYPE-B DEFENSE .............. ${GR}ARMED${RS}"
+  "${TL}  [NET ]${RS}  NETWORK INTERFACE wlo1 ............. ${GR}ACTIVE${RS}"
+  "${GD}  [ENV ]${RS}  DISPLAY SERVER X11 ................. ${GR}ACTIVE${RS}"
+  "${GD}  [ENV ]${RS}  COMPOSITOR picom ................... ${GR}INIT${RS}"
+  "${GD}  [ENV ]${RS}  WINDOW MANAGER i3wm ................ ${GR}LOADED${RS}"
+  "${BL}  [LLM ]${RS}  MELCHIOR CEREBRUM OLLAMA ........... ${GR}ONLINE${RS}"
+  "${GR}  [EVA ]${RS}  TACTICAL INTERFACE ................. ${GR}SYNCHRONIZED${RS}"
 )
 
 for line in "${checks[@]}"; do
-    echo -e "$line"
-    sleep 0.12
+    echo -e "$line"; sleep 0.1
 done
 
 echo ""
-sleep 0.3
-
-# Core sync meter
-echo -e "${C_WHITE}  CORE SYNC RATIO:${C_RESET}"
+sleep 0.2
+echo -e "${OR}  CORE SYNC RATIO:${RS}"
 echo -n "  ["
-
-# Animate the sync bar
 for i in $(seq 1 40); do
-    echo -ne "${C_GREEN}█${C_RESET}"
-    sleep 0.04
+    printf "${OR}█${RS}"; sleep 0.035
 done
-
-echo "] ${C_GREEN}${C_BOLD}99.6%${C_RESET}"
+echo "] ${GR}${BD}99.6%${RS}"
 echo ""
 sleep 0.3
-
-echo -e "${C_GREEN}${C_BOLD}  ▶ TACTICAL INTERFACE ONLINE — INITIALIZING HUD...${C_RESET}"
+echo -e "${OR}${BD}  ▶ MAGI SYSTEM ONLINE — PROTECT NO.666 ACTIVE${RS}"
 echo ""
-sleep 0.5
-
-# Fade out effect — clear line by line
-for i in $(seq 1 5); do
-    echo ""
-    sleep 0.08
-done
-
-sleep 0.3
+sleep 0.6
 clear
