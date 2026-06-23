@@ -8,6 +8,10 @@
 # Ensure ~/.local/bin is in PATH (eww lives there)
 export PATH="$HOME/.local/bin:$PATH"
 
+# Force dark GTK theme so eww panels get black backgrounds
+export GTK_THEME="Adwaita:dark"
+export GTK2_RC_FILES="/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc"
+
 EWW_BIN="$(command -v eww 2>/dev/null || echo "$HOME/.local/bin/eww")"
 EWW_CONFIG="$HOME/.config/eva-shell/config/eww"
 

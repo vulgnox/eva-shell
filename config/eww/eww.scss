@@ -25,9 +25,10 @@ $font:       "JetBrains Mono";
 
 // ============================================================
 // GLOBAL — force black background on everything
+// GTK CSS requires 'background' shorthand to fully override theme
 // ============================================================
-window, window * {
-  background-color: $bg;
+* {
+  background: $bg;
   background-image: none;
   font-family: $font, monospace;
   font-size: 10px;
@@ -39,11 +40,16 @@ window, window * {
   padding: 0;
 }
 
+window {
+  background: $bg;
+  color: $orange;
+}
+
 // ============================================================
 // PANEL BASE
 // ============================================================
 .panel {
-  background-color: $bg;
+  background: $bg;
   color: $orange;
 }
 
