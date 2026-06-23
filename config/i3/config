@@ -43,7 +43,7 @@ gaps inner 0
 gaps outer 0
 gaps left 280
 gaps right 280
-gaps bottom 120
+gaps bottom 100
 gaps top 24
 
 # ============================================================
