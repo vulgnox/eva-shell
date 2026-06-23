@@ -1,12 +1,11 @@
 // ============================================================
 // EVA-SHELL — eww.scss
 // MAGI SUPERCOMPUTER — Full HUD Styling
-// Colors match nerv_magi_v3_exact_colors.html EXACTLY
+// Uses ONLY GTK3-compatible CSS properties
 // ============================================================
 
-// --- Color variables (from HTML reference) ---
+// --- Color variables ---
 $bg:         #000000;
-$bg-panel:   #050200;
 $border-grn: #1a3a10;
 $border-dim: #0a1a08;
 $border-dk:  #0a2a18;
@@ -20,272 +19,243 @@ $yellow:     #f4b000;
 $red:        #f02020;
 $dim:        #484848;
 $dead:       #1a2a10;
-$font:       "JetBrains Mono";
 
 // ============================================================
-// GLOBAL RESET — force black background everywhere
+// GLOBAL RESET
 // ============================================================
 * {
-  background: $bg;
-  background-image: none;
-  font-family: $font, monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   color: $dim;
-  border: none;
+  background-color: $bg;
+  background-image: none;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
   border-radius: 0;
-  box-shadow: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  box-shadow: none;
 }
 
 window {
-  background: $bg;
-  color: $dim;
+  background-color: $bg;
 }
 
 // ============================================================
-// PANEL CONTAINERS — outer borders matching HTML .screen
+// PANELS
 // ============================================================
 .panel {
-  background: $bg;
+  background-color: $bg;
 }
 
 .left-panel {
-  border-right: 1px solid $border-grn;
-  border-top: 1px solid $orange;
-  border-bottom: 1px solid $orange;
-  border-left: 1px solid $orange;
   padding: 4px 3px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-color: $orange;
+  border-bottom-color: $orange;
+  border-left-color: $orange;
+  border-right-color: $border-grn;
 }
 
 .right-panel {
-  border-left: 1px solid $border-grn;
-  border-top: 1px solid $orange;
-  border-bottom: 1px solid $orange;
-  border-right: 1px solid $orange;
   padding: 4px 3px 4px 5px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-color: $orange;
+  border-bottom-color: $orange;
+  border-left-color: $border-grn;
+  border-right-color: $orange;
 }
 
 .bottom-panel {
-  border-top: 1px solid $orange;
   padding: 0;
+  border-top-width: 1px;
+  border-top-color: $orange;
 }
 
 // ============================================================
-// SECTION LABELS — colored headers with underline
-// Matches HTML .slbl classes
+// SECTION LABELS
 // ============================================================
+.section {
+  padding: 4px 0;
+}
+
 .section-label {
   font-size: 9px;
   letter-spacing: 2px;
-  padding-bottom: 1px;
+  padding-bottom: 2px;
   margin-bottom: 3px;
-  border-bottom: 1px solid $border-dim;
+  border-bottom-width: 1px;
+  border-bottom-color: $border-dim;
   color: $orange;
+}
 
-  &.green  { color: $green-dim; border-bottom-color: $border-dim; }
-  &.cyan   { color: $teal; border-bottom-color: $border-dk; }
-  &.blue   { color: $blue; border-bottom-color: #0a1a28; }
-  &.orange { color: $orange; border-bottom-color: $border-grn; }
+.section-label.green {
+  color: $green-dim;
+  border-bottom-color: $border-dim;
+}
+
+.section-label.cyan {
+  color: $teal;
+  border-bottom-color: $border-dk;
+}
+
+.section-label.blue {
+  color: $blue;
+  border-bottom-color: #0a1a28;
+}
+
+.section-label.orange {
+  color: $orange;
+  border-bottom-color: $border-grn;
 }
 
 // ============================================================
-// LEFT PANEL — SYS_LOG_STREAM + PROCESS_TREE
+// LEFT PANEL — LOGS + PROCESS
 // ============================================================
 .log-container {
   min-height: 180px;
 }
 
-.log-line {
-  font-size: 9px;
-  line-height: 1.55;
-
-  &.ok  { color: $green-dim; }
-  &.hi  { color: $green; }
-  &.wrn { color: $yellow; }
-  &.err { color: $red; }
-  &.net { color: $teal; }
-  &.krn { color: $blue; }
-  &.eva { color: $orange; }
-  &.dim { color: $dim; }
-}
-
-// Fallback for text-based log
 .log-text {
   font-size: 9px;
-  line-height: 1.55;
   color: $green-dim;
-}
-
-// Process bars — matches HTML .br/.bb/.bf
-.proc-row {
-  padding: 1px 0;
-}
-
-.proc-label {
-  font-size: 9px;
-  color: $dim;
-  min-width: 60px;
-}
-
-.proc-bar-bg {
-  min-height: 4px;
-  background: #0a0a0a;
-  border: 1px solid $border-grn;
-  border-radius: 0;
-}
-
-.proc-bar-fill {
-  min-height: 4px;
-  border-radius: 0;
-  &.green { background: $green; }
-  &.teal  { background: $teal; }
-  &.blue  { background: $blue; }
-  &.orange { background: $orange; }
-}
-
-.proc-val {
-  font-size: 9px;
-  min-width: 35px;
-  &.green { color: $green; }
-  &.teal  { color: $teal; }
-  &.blue  { color: $blue; }
-  &.orange { color: $orange; }
-}
-
-// Progress bars (GTK scale widget)
-scale {
-  min-height: 4px;
-  background: #0a0a0a;
-  border: 1px solid $border-grn;
-
-  trough {
-    min-height: 4px;
-    background: #0a0a0a;
-    border-radius: 0;
-  }
-
-  highlight, progress {
-    border-radius: 0;
-    min-height: 4px;
-  }
-
-  slider {
-    min-width: 0;
-    min-height: 0;
-    background: transparent;
-    border: none;
-  }
 }
 
 .proc-text {
   font-size: 9px;
-  line-height: 1.6;
   color: $teal;
 }
 
 // ============================================================
-// RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS
+// RIGHT PANEL
 // ============================================================
-
-// ASCII art box
 .ascii-art {
   font-size: 9px;
-  line-height: 1.3;
   color: $orange;
   padding: 4px 2px;
   margin-bottom: 3px;
 }
 
-// Net intercept bars
-.net-row {
-  padding: 1px 0;
-}
-
+// Net bars
 .net-label {
   font-size: 9px;
   color: $dim;
   min-width: 22px;
 }
 
-.net-bar {
-  min-height: 4px;
-  background: #0a0a0a;
-  border: 1px solid $border-grn;
-  border-radius: 0;
-
-  trough {
-    min-height: 4px;
-    background: #0a0a0a;
-    border-radius: 0;
-  }
-  highlight, progress {
-    border-radius: 0;
-  }
-  &.rx-bar highlight, &.rx-bar progress { background: $teal; }
-  &.tx-bar highlight, &.tx-bar progress { background: $teal-hi; }
-}
-
-.net-val {
+.net-val.cyan {
   font-size: 9px;
-  min-width: 35px;
-  &.rx, &.cyan { color: $teal; }
-  &.tx, &.teal { color: $teal-hi; }
+  color: $teal;
 }
 
-// MAGI DIAG — left-bordered items (matches HTML reference exactly)
-.diag-section {
-  margin-top: 4px;
+.net-val.teal {
+  font-size: 9px;
+  color: $teal-hi;
 }
 
+// MAGI DIAG
 .diag-item {
   padding: 2px 0 2px 6px;
   margin: 2px 0;
-  border-left: 2px solid $dim;
+  border-left-width: 2px;
+  border-left-color: $dim;
+}
 
-  &.mel, &.mel-border { border-left-color: $blue; }
-  &.bal, &.bal-border { border-left-color: $orange; }
-  &.cas, &.cas-border { border-left-color: $teal; }
+.diag-item.mel-border {
+  border-left-color: $blue;
+}
+
+.diag-item.bal-border {
+  border-left-color: $orange;
+}
+
+.diag-item.cas-border {
+  border-left-color: $teal;
 }
 
 .diag-label {
   font-size: 9px;
   letter-spacing: 1px;
-  &.mel { color: $blue; }
-  &.bal { color: $orange; }
-  &.cas { color: $teal; }
 }
 
-.diag-bar {
-  min-height: 3px;
-  margin: 1px 0;
-  background: #0a0a0a;
-  border: 1px solid $border-grn;
-  border-radius: 0;
+.diag-label.mel {
+  color: $blue;
+}
 
-  trough {
-    min-height: 3px;
-    background: #0a0a0a;
-    border-radius: 0;
-  }
-  highlight, progress {
-    border-radius: 0;
-  }
-  &.mel highlight, &.mel progress { background: $blue; }
-  &.bal highlight, &.bal progress { background: $orange; }
-  &.cas highlight, &.cas progress { background: $teal; }
+.diag-label.bal {
+  color: $orange;
+}
+
+.diag-label.cas {
+  color: $teal;
 }
 
 .diag-val {
   font-size: 9px;
   font-weight: bold;
-  min-width: 30px;
-  &.mel { color: $blue; }
-  &.bal { color: $orange; }
-  &.cas { color: $teal; }
 }
 
-// SYS_CONTROLS — dot + label + value
+.diag-val.mel {
+  color: $blue;
+}
+
+.diag-val.bal {
+  color: $orange;
+}
+
+.diag-val.cas {
+  color: $teal;
+}
+
+// Scale widgets (progress bars)
+scale trough {
+  min-height: 4px;
+  background-color: #0a0a0a;
+  border-width: 1px;
+  border-color: $border-grn;
+  border-radius: 0;
+}
+
+scale trough highlight {
+  border-radius: 0;
+  min-height: 4px;
+}
+
+scale slider {
+  min-width: 0;
+  min-height: 0;
+  background-color: transparent;
+}
+
+// Specific bar colors
+.mel-bar trough highlight {
+  background-color: $blue;
+}
+
+.bal-bar trough highlight {
+  background-color: $orange;
+}
+
+.cas-bar trough highlight {
+  background-color: $teal;
+}
+
+.rx-bar trough highlight {
+  background-color: $teal;
+}
+
+.tx-bar trough highlight {
+  background-color: $teal-hi;
+}
+
+// Controls
 .ctrl-row {
   padding: 2px 0;
 }
@@ -294,9 +264,18 @@ scale {
   min-width: 6px;
   min-height: 6px;
   border-radius: 50%;
-  &.on   { background: $green; }
-  &.off  { background: $dead; }
-  &.warn { background: $yellow; }
+}
+
+.ctrl-dot.on {
+  background-color: $green;
+}
+
+.ctrl-dot.off {
+  background-color: $dead;
+}
+
+.ctrl-dot.warn {
+  background-color: $yellow;
 }
 
 .ctrl-label {
@@ -304,70 +283,47 @@ scale {
   color: $dim;
 }
 
-.ctrl-val {
+.ctrl-val.on {
   font-size: 9px;
-  &.on   { color: $green; }
-  &.off  { color: $dim; }
-  &.warn { color: $yellow; }
+  color: $green;
+}
+
+.ctrl-val.off {
+  font-size: 9px;
+  color: $dim;
+}
+
+.ctrl-val.warn {
+  font-size: 9px;
+  color: $yellow;
 }
 
 // ============================================================
-// BOTTOM PANEL — 4 cells (HOME_DIR | KBD | SYS_STATUS | HOTKEYS)
+// BOTTOM PANEL
 // ============================================================
 .bottom-cell {
   padding: 4px 6px;
-  border-right: 1px solid $border-grn;
+  border-right-width: 1px;
+  border-right-color: $border-grn;
   min-height: 80px;
-
-  &:last-child {
-    border-right: none;
-  }
 }
 
-// HOME_DIRECTORY — file listing
 .file-text {
   font-size: 9px;
-  line-height: 1.5;
+  color: $teal;
 }
 
-.file-line {
+.kbd-text {
   font-size: 9px;
-  &.dir     { color: $teal; }
-  &.file    { color: $dim; }
-  &.special { color: $green; }
-}
-
-// KEYBOARD_SENSOR
-.kbd-grid {
-  margin-top: 2px;
-}
-
-.kbd-key {
-  background: $bg;
-  border: 1px solid $dead;
-  min-height: 14px;
-  min-width: 14px;
-  padding: 1px 2px;
-  font-size: 7px;
-  color: $dim;
-
-  &.on  { border-color: $green; color: $green; }
-  &.hot { border-color: $orange; color: $orange; }
+  color: $green;
 }
 
 .kbd-meta {
   font-size: 8px;
   color: $dim;
-  margin-top: 2px;
-
-  .highlight { color: $orange; }
 }
 
-// MAGI_SYS_STATUS — stats grid
-.status-grid {
-  padding: 2px 0;
-}
-
+// Status values
 .stat-label {
   font-size: 7px;
   letter-spacing: 1px;
@@ -377,33 +333,38 @@ scale {
 .stat-val {
   font-size: 13px;
   font-weight: bold;
-  &.green  { color: $green; }
-  &.blue   { color: $blue; }
-  &.yellow { color: $yellow; }
-  &.orange { color: $orange; }
 }
 
-// HOTKEYS
-.hotkey-text {
-  font-size: 9px;
-  line-height: 1.7;
-  color: $dim;
+.stat-val.green {
+  color: $green;
 }
 
-.hotkey-key {
+.stat-val.blue {
   color: $blue;
 }
 
+.stat-val.yellow {
+  color: $yellow;
+}
+
+// Hotkeys
+.hotkey-text {
+  font-size: 9px;
+  color: $dim;
+}
+
 // ============================================================
-// MAGI CENTER (if used as eww window — currently TUI)
+// MAGI CENTER (used by TUI — kept for reference)
 // ============================================================
 .magi-center-panel {
-  border-bottom: 1px solid $orange;
+  border-bottom-width: 1px;
+  border-bottom-color: $orange;
   padding: 4px 6px 0;
 }
 
 .corner-box {
-  border: 1px solid $orange;
+  border-width: 1px;
+  border-color: $orange;
   padding: 3px 6px;
 }
 
@@ -417,11 +378,6 @@ scale {
   font-size: 13px;
   font-weight: bold;
   color: $orange;
-  letter-spacing: 1px;
-}
-
-.magi-title {
-  padding: 0 10px;
 }
 
 .magi-main-title {
@@ -433,16 +389,14 @@ scale {
 
 .magi-sub-title {
   font-size: 8px;
-  letter-spacing: 1px;
   color: $green-dim;
 }
 
-// Consensus dots
 .cdot {
   min-width: 8px;
   min-height: 8px;
   border-radius: 50%;
-  background: $green;
+  background-color: $green;
 }
 
 .consensus-label {
@@ -455,14 +409,22 @@ scale {
   color: $green;
 }
 
-// MAGI unit bars
-.unit-name {
+.unit-name.mel {
   font-size: 10px;
   font-weight: bold;
-  letter-spacing: 1px;
-  &.mel { color: $blue; }
-  &.bal { color: $orange; }
-  &.cas { color: $teal; }
+  color: $blue;
+}
+
+.unit-name.bal {
+  font-size: 10px;
+  font-weight: bold;
+  color: $orange;
+}
+
+.unit-name.cas {
+  font-size: 10px;
+  font-weight: bold;
+  color: $teal;
 }
 
 .unit-sub {
@@ -470,47 +432,35 @@ scale {
   color: $dim;
 }
 
-.unit-val {
+.unit-val.mel {
   font-size: 9px;
-  font-weight: bold;
-  &.mel { color: $blue; }
-  &.bal { color: $orange; }
-  &.cas { color: $teal; }
-}
-
-// LLM box (MELCHIOR output)
-.llm-box {
-  border: 1px solid $blue;
-  padding: 3px;
-  margin-top: 2px;
-}
-
-.llm-label {
-  font-size: 8px;
-  letter-spacing: 1px;
   color: $blue;
-  margin-bottom: 2px;
 }
 
-.llm-text {
+.unit-val.bal {
+  font-size: 9px;
+  color: $orange;
+}
+
+.unit-val.cas {
   font-size: 9px;
   color: $teal;
-  line-height: 1.4;
 }
 
-// Workspace indicator
-.ws-line {
-  font-size: 9px;
-  padding: 1px 0;
-  &.active { color: $green; }
-  &.inactive { color: $dim; }
+.magi-diamond {
+  border-width: 2px;
+  border-color: $orange;
+  padding: 8px 12px;
+  background-color: #050500;
 }
 
-.ws-dot {
-  min-width: 5px;
-  min-height: 5px;
-  border-radius: 50%;
-  &.on  { background: $green; }
-  &.off { background: $dead; }
-  &.or  { background: $orange; }
+.diamond-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: $orange;
+}
+
+.diamond-sub {
+  font-size: 11px;
+  color: $orange;
 }
