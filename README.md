@@ -178,6 +178,17 @@ eww windows                    # list all eww windows
 tail -f ~/.eva-shell/boot.log  # boot sequence log
 journalctl -u eww --user -f    # eww errors
 ```
+- [x] Phase 0 — Repo & architecture
+- [x] Phase 1 — Base installation
+- [x] Phase 2 — Theme engine
+- [x] Phase 3 — Layout skeleton
+- [ ] Phase 4 — Boot sequence
+- [ ] Phase 5 — Left flank (logs + process tree)
+- [ ] Phase 6 — Right flank (ASCII loop + MAGI)
+- [ ] Phase 7 — Bottom flank (ranger + widgets)
+- [ ] Phase 8 — Central canvas rules
+- [ ] Phase 9 — Polybar top bar
+- [ ] Phase 10 — Polish & integration
 
 ---
 
