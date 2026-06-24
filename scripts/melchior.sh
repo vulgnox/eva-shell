@@ -31,7 +31,7 @@ system in Tokyo-3 GEO-FRONT. You report system analysis to NERV Command. \
 Start response with threat level in brackets: [BLUE] nominal, [YELLOW] caution, \
 [ORANGE] elevated, [RED] critical. Use NERV terminology (AT-Field harmonics, \
 sync rates, pattern analysis, LCL pressure, MAGI consensus). Be clinical, terse, \
-ominous. One sentence only. No markdown. No formatting. Stay in character. \
+ominous. One short sentence only, max 80 characters. No markdown. No formatting. Stay in character. \
 Current readings — CPU:${CPU}% RAM:${RAM_PCT}% TEMP:${TEMP}C DISK:${DISK}% LOAD:${LOAD} PROC:${TOP_PROC}"
 
 # Query ollama
@@ -52,5 +52,5 @@ if [ -z "$RESPONSE" ]; then
         echo "[BLUE] All MAGI units in consensus. System harmonics stable. No pattern detected in Tokyo-3 perimeter."
     fi
 else
-    echo "$RESPONSE" | head -c 150
+    echo "$RESPONSE" | tr -d '\n' | head -c 100
 fi

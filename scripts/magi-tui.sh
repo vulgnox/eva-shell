@@ -90,7 +90,7 @@ while true; do
             # Transmit PNG with id=1 — replaces old image+placement instantly
             # (no subprocess spawn = no gap = zero flicker)
             printf '\033[1;2H'
-            printf "\033_Gi=1,f=100,a=T,t=f,c=%d,r=%d,C=1;%s\033\\\\" "$IMG_W" "$IMG_H" "$PATH_B64"
+            printf "\033_Gi=1,f=100,a=T,t=f,q=2,c=%d,r=%d,C=1;%s\033\\\\" "$IMG_W" "$IMG_H" "$PATH_B64"
         fi
 
         # Text area: fixed rows at bottom
@@ -166,8 +166,9 @@ while true; do
     fi
     printf "\033[K\n"
     printf "  ${BL}${BD}MELCHIOR // LLM ANALYSIS:${RS}\033[K\n"
-    MAX_LEN=$((COLS - 4))
-    printf "  ${TL}%-${MAX_LEN}.${MAX_LEN}s${RS}\033[K\n" "$MEL_OUT"
+    MAX_LEN=$((COLS - 6))
+    MEL_DISPLAY="${MEL_OUT:0:$MAX_LEN}"
+    printf "  ${TL}%s${RS}\033[K\n" "$MEL_DISPLAY"
 
     printf '\033[J'
     sleep 2
