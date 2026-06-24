@@ -1,7 +1,7 @@
 ; ============================================================
 ; EVA-SHELL — eww.yuck
 ; MAGI SUPERCOMPUTER — Full HUD Panel System
-; 4 windows: left-panel, magi-center, right-panel, bottom-panel
+; 4 windows: left-panel, right-panel, bottom-panel, magi-topbar
 ; No overlap with center workspace (i3 gaps handle separation)
 ; ============================================================
 
@@ -35,77 +35,6 @@
       (label :class "section-label cyan" :halign "start" :text "PROCESS_TREE")
       (label :class "proc-text" :halign "start" :valign "start"
              :wrap true :text proc_data))))
-
-; ============================================================
-; MAGI CENTER — Header + MAGI Units + Clock
-; ============================================================
-(defwidget magi-center-widget []
-  (box :class "panel magi-center-panel" :orientation "v" :spacing 0
-    ; MAGI HEADER
-    (box :class "magi-header" :orientation "h" :spacing 0
-      (box :class "corner-box" :orientation "v" :halign "start"
-        (label :class "corner-label" :text "DANANG TYPE-B")
-        (label :class "corner-val" :text "PROTECT")
-        (label :class "corner-sub yellow" :text "NO. 666"))
-      (box :class "magi-title" :orientation "v" :halign "center" :hexpand true
-        (label :class "magi-main-title" :text "MAGI -- 01")
-        (label :class "magi-sub-title" :text "on MAGI-01 ORIGINAL")
-        (box :class "consensus-bar" :orientation "h" :halign "center" :spacing 6
-          (box :class "cdot mel-dot")
-          (label :class "consensus-label" :text "MEL")
-          (box :class "cdot bal-dot")
-          (label :class "consensus-label" :text "BAL")
-          (box :class "cdot cas-dot")
-          (label :class "consensus-label" :text "CAS")
-          (label :class "consensus-ok" :text "3/3 CONSENSUS")))
-      (box :class "corner-box" :orientation "v" :halign "end"
-        (label :class "corner-label" :text "TIME TO COLLAPSE")
-        (label :class "corner-val" :text uptime_str)
-        (label :class "corner-sub" :text "sec.")))
-
-    ; MAGI UNITS ROW
-    (box :class "magi-units" :orientation "h" :halign "center" :spacing 12
-      ; MELCHIOR
-      (box :class "magi-unit mel-unit" :orientation "v" :spacing 1
-        (label :class "unit-name mel" :text "MELCHIOR")
-        (label :class "unit-sub" :text "CEREBRUM // LLM")
-        (scale :class "unit-bar mel-bar"
-               :value {jq(magi_data, ".melchior.value") ?: 0}
-               :min 0 :max 100 :active false)
-        (label :class "unit-val mel" :halign "end"
-               :text "${jq(magi_data, '.melchior.value') ?: 0}%"))
-      ; MAGI DIAMOND
-      (box :class "magi-diamond" :orientation "v" :halign "center" :valign "center"
-        (label :class "diamond-text" :text "MAGI")
-        (label :class "diamond-sub" :text "01"))
-      ; BALTHASAR
-      (box :class "magi-unit bal-unit" :orientation "v" :spacing 1
-        (label :class "unit-name bal" :text "BALTHASAR")
-        (label :class "unit-sub" :text "CALLOSUM // MEM")
-        (scale :class "unit-bar bal-bar"
-               :value {jq(magi_data, ".balthasar.value") ?: 0}
-               :min 0 :max 100 :active false)
-        (label :class "unit-val bal" :halign "end"
-               :text "${jq(magi_data, '.balthasar.value') ?: 0}%")))
-
-    ; CASPAR
-    (box :class "caspar-row" :orientation "h" :halign "center"
-      (box :class "magi-unit cas-unit" :orientation "v" :spacing 1
-        (label :class "unit-name cas" :text "CASPAR")
-        (label :class "unit-sub" :text "MEDULLA // ENV")
-        (scale :class "unit-bar cas-bar"
-               :value {jq(magi_data, ".caspar.value") ?: 0}
-               :min 0 :max 100 :active false)
-        (label :class "unit-val cas" :halign "end"
-               :text "${jq(magi_data, '.caspar.value') ?: 0}C")))
-
-    ; CLOCK STRIP
-    (box :class "clock-strip" :orientation "h" :halign "center" :spacing 8
-      (label :class "clock-date" :text clock_date)
-      (label :class "clock-sep" :text "//")
-      (label :class "clock-time" :text clock_time)
-      (label :class "clock-sep" :text "//")
-      (label :class "clock-loc" :text "TOKYO-3 // GEO-FRONT"))))
 
 ; ============================================================
 ; RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS

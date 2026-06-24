@@ -29,7 +29,7 @@ sleep 0.5
 "$EWW_BIN" daemon --config "$EWW_CONFIG" 2>/dev/null &
 sleep 1.5
 
-# Open HUD panels: topbar first (reserves top 16px), then flanks + bottom
+# Open HUD panels: topbar first (reserves top 24px), then flanks + bottom
 "$EWW_BIN" open magi-topbar  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open left-panel   --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open right-panel  --config "$EWW_CONFIG" 2>&1
