@@ -1,178 +1,284 @@
 ; ============================================================
 ; EVA-SHELL — eww.yuck
-; MAGI SUPERCOMPUTER — Full Panel
-; Animated circuit borders via CSS + live data
+; MAGI SUPERCOMPUTER — Full HUD Panel System
+; 4 windows: left-panel, magi-center, right-panel, bottom-panel
+; No overlap with center workspace (i3 gaps handle separation)
 ; ============================================================
 
 ; ============================================================
-; POLLS
+; POLLS — data sources
 ; ============================================================
 (defpoll magi_data   :interval "2s"  :initial "{}" `~/.config/eva-shell/scripts/magi-stats.sh`)
-(defpoll mel_llm     :interval "30s" :initial "Initializing MELCHIOR analysis..." `~/.config/eva-shell/scripts/melchior.sh`)
+(defpoll mel_llm     :interval "30s" :initial "Systems nominal. No anomalies detected." `~/.config/eva-shell/scripts/melchior.sh`)
 (defpoll net_data    :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/net-stats.sh`)
+(defpoll log_lines   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/log-poll.sh`)
+(defpoll proc_data   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/proc-poll.sh`)
+(defpoll file_list   :interval "10s" :initial "" `~/.config/eva-shell/scripts/file-poll.sh`)
+(defpoll kbd_data    :interval "1s"  :initial "" `~/.config/eva-shell/scripts/kbd-poll.sh`)
 (defpoll clock_time  :interval "1s"  :initial "00:00:00" `date '+%H:%M:%S'`)
 (defpoll clock_date  :interval "60s" :initial "0000.00.00" `date '+%Y.%m.%d'`)
 (defpoll uptime_str  :interval "30s" :initial "--" `uptime -p | sed 's/up //'`)
 
 ; ============================================================
-; MAGI CONSENSUS LOGIC
+; LEFT PANEL — SYS_LOG_STREAM + PROCESS_TREE
 ; ============================================================
-(defwidget consensus-dot [color label]
-  (box :class "consensus-row" :spacing 4 :orientation "h"
-    (box :class "cdot" :style "background:${color};")
-    (label :class "clabel" :text label)))
+(defwidget left-panel-widget []
+  (box :class "panel left-panel" :orientation "v" :spacing 0
+    ; SYS_LOG_STREAM
+    (box :class "section" :orientation "v" :spacing 0 :vexpand true
+      (label :class "section-label green" :halign "start" :text "SYS_LOG_STREAM")
+      (box :class "log-container" :orientation "v" :vexpand true
+        (label :class "log-text" :halign "start" :valign "start"
+               :wrap true :text log_lines)))
+    ; PROCESS_TREE
+    (box :class "section" :orientation "v" :spacing 2
+      (label :class "section-label cyan" :halign "start" :text "PROCESS_TREE")
+      (label :class "proc-text" :halign "start" :valign "start"
+             :wrap true :text proc_data))))
 
 ; ============================================================
-; SINGLE MAGI UNIT BLOCK
+; MAGI CENTER — Header + MAGI Units + Clock
 ; ============================================================
-(defwidget magi-unit [unit-name sub-name value unit color llm-flag]
-  (box :class "magi-unit-wrap" :orientation "v" :spacing 2
-    (box :class "magi-unit-header" :orientation "h" :spacing 4
-      (label :class "magi-unit-name" :style "color:${color};" :text unit-name)
-      (label :class "magi-unit-sub"  :text sub-name))
-    (scale :class "magi-bar"
-           :value {value ?: 0}
-           :min 0 :max 100
-           :active false
-           :style "color:${color};")
-    (box :orientation "h" :halign "end"
-      (label :class "magi-unit-val" :style "color:${color};"
-             :text "${value}${unit}"))))
-
-; ============================================================
-; MAIN MAGI PANEL
-; ============================================================
-(defwidget magi-main []
-  (box :class "magi-root" :orientation "v" :spacing 0
-
-    ; === TOP: DANANG HEADER ===
-    (box :class "magi-header" :orientation "h" :halign "fill"
-      (box :class "corner-box corner-left" :orientation "v"
+(defwidget magi-center-widget []
+  (box :class "panel magi-center-panel" :orientation "v" :spacing 0
+    ; MAGI HEADER
+    (box :class "magi-header" :orientation "h" :spacing 0
+      (box :class "corner-box" :orientation "v" :halign "start"
         (label :class "corner-label" :text "DANANG TYPE-B")
-        (label :class "corner-val"   :text "PROTECT NO.666")
-        (label :class "corner-sub"   :text "on MAGI-01 ORIGINAL"))
-      (box :class "magi-title-center" :orientation "v" :halign "center" :hexpand true
-        (label :class "magi-main-title" :text "MAGI — 01")
-        (label :class "magi-sub-title"  :text "on MAGI-01 ORIGINAL")
-        (box :class "consensus-bar" :orientation "h" :halign "center" :spacing 8
-          (consensus-dot :color {(jq magi_data ".melchior.color") ?: "#50ff10"} :label "MEL")
-          (consensus-dot :color {(jq magi_data ".balthasar.color") ?: "#50ff10"} :label "BAL")
-          (consensus-dot :color {(jq magi_data ".caspar.color") ?: "#50ff10"} :label "CAS")
-          (label :class "consensus-label" :text "3/3 CONSENSUS")))
-      (box :class "corner-box corner-right" :orientation "v" :halign "end"
+        (label :class "corner-val" :text "PROTECT")
+        (label :class "corner-sub yellow" :text "NO. 666"))
+      (box :class "magi-title" :orientation "v" :halign "center" :hexpand true
+        (label :class "magi-main-title" :text "MAGI -- 01")
+        (label :class "magi-sub-title" :text "on MAGI-01 ORIGINAL")
+        (box :class "consensus-bar" :orientation "h" :halign "center" :spacing 6
+          (box :class "cdot mel-dot")
+          (label :class "consensus-label" :text "MEL")
+          (box :class "cdot bal-dot")
+          (label :class "consensus-label" :text "BAL")
+          (box :class "cdot cas-dot")
+          (label :class "consensus-label" :text "CAS")
+          (label :class "consensus-ok" :text "3/3 CONSENSUS")))
+      (box :class "corner-box" :orientation "v" :halign "end"
         (label :class "corner-label" :text "TIME TO COLLAPSE")
-        (label :class "corner-val"   :text {uptime_str})
-        (label :class "corner-sub"   :text "sec.")))
+        (label :class "corner-val" :text uptime_str)
+        (label :class "corner-sub" :text "sec.")))
 
-    ; === CLOCK STRIP ===
-    (box :class "clock-strip" :orientation "h" :halign "center" :spacing 10
-      (label :class "clock-date" :text clock_date)
-      (label :class "clock-sep"  :text "//")
-      (label :class "clock-time" :text clock_time)
-      (label :class "clock-sep"  :text "//")
-      (label :class "clock-loc"  :text "TOKYO-3 // GEO-FRONT"))
+    ; MAGI UNITS ROW
+    (box :class "magi-units" :orientation "h" :halign "center" :spacing 12
+      ; MELCHIOR
+      (box :class "magi-unit mel-unit" :orientation "v" :spacing 1
+        (label :class "unit-name mel" :text "MELCHIOR")
+        (label :class "unit-sub" :text "CEREBRUM // LLM")
+        (scale :class "unit-bar mel-bar"
+               :value {jq(magi_data, ".melchior.value") ?: 0}
+               :min 0 :max 100 :active false)
+        (label :class "unit-val mel" :halign "end"
+               :text "${jq(magi_data, '.melchior.value') ?: 0}%"))
+      ; MAGI DIAMOND
+      (box :class "magi-diamond" :orientation "v" :halign "center" :valign "center"
+        (label :class "diamond-text" :text "MAGI")
+        (label :class "diamond-sub" :text "01"))
+      ; BALTHASAR
+      (box :class "magi-unit bal-unit" :orientation "v" :spacing 1
+        (label :class "unit-name bal" :text "BALTHASAR")
+        (label :class "unit-sub" :text "CALLOSUM // MEM")
+        (scale :class "unit-bar bal-bar"
+               :value {jq(magi_data, ".balthasar.value") ?: 0}
+               :min 0 :max 100 :active false)
+        (label :class "unit-val bal" :halign "end"
+               :text "${jq(magi_data, '.balthasar.value') ?: 0}%")))
 
-    ; === MAGI UNITS ===
-    (box :class "magi-units-row" :orientation "h" :spacing 6 :halign "fill"
-      (magi-unit
-        :unit-name "MELCHIOR"
-        :sub-name  "CEREBRUM // LLM"
-        :value     {(jq magi_data ".melchior.value") ?: 0}
-        :unit      "%"
-        :color     "#5090c8"
-        :llm-flag  "true")
-      (box :class "magi-center-diamond" :orientation "v" :halign "center" :valign "center"
-        (label :class "diamond-label" :text "MAGI")
-        (label :class "diamond-sub"   :text "01"))
-      (magi-unit
-        :unit-name "BALTHASAR"
-        :sub-name  "CALLOSUM // MEM"
-        :value     {(jq magi_data ".balthasar.value") ?: 0}
-        :unit      "%"
-        :color     "#ec7420"
-        :llm-flag  "false"))
-
+    ; CASPAR
     (box :class "caspar-row" :orientation "h" :halign "center"
-      (magi-unit
-        :unit-name "CASPAR"
-        :sub-name  "MEDULLA // ENV"
-        :value     {(jq magi_data ".caspar.value") ?: 0}
-        :unit      "°C"
-        :color     "#60f0a0"
-        :llm-flag  "false"))
+      (box :class "magi-unit cas-unit" :orientation "v" :spacing 1
+        (label :class "unit-name cas" :text "CASPAR")
+        (label :class "unit-sub" :text "MEDULLA // ENV")
+        (scale :class "unit-bar cas-bar"
+               :value {jq(magi_data, ".caspar.value") ?: 0}
+               :min 0 :max 100 :active false)
+        (label :class "unit-val cas" :halign "end"
+               :text "${jq(magi_data, '.caspar.value') ?: 0}C")))
 
-    ; === MELCHIOR LLM OUTPUT ===
-    (box :class "llm-section" :orientation "v" :spacing 3
-      (label :class "llm-header" :text "MELCHIOR // CEREBRUM OUTPUT")
-      (box :class "llm-box" :orientation "v"
-        (label :class "llm-timestamp" :text "ANALYSIS — ${clock_time}")
-        (label :class "llm-text" :wrap true :text mel_llm)))
+    ; CLOCK STRIP
+    (box :class "clock-strip" :orientation "h" :halign "center" :spacing 8
+      (label :class "clock-date" :text clock_date)
+      (label :class "clock-sep" :text "//")
+      (label :class "clock-time" :text clock_time)
+      (label :class "clock-sep" :text "//")
+      (label :class "clock-loc" :text "TOKYO-3 // GEO-FRONT"))))
 
-    ; === NET STATS ===
-    (box :class "net-section" :orientation "v" :spacing 2
-      (label :class "section-title" :text "NET_INTERCEPT")
-      (box :orientation "h" :spacing 6
+; ============================================================
+; RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS
+; ============================================================
+(defwidget right-panel-widget []
+  (box :class "panel right-panel" :orientation "v" :spacing 0
+    ; ASCII_RENDER
+    (box :class "section" :orientation "v" :spacing 0
+      (label :class "section-label orange" :halign "start" :text "ASCII_RENDER")
+      (label :class "ascii-art" :text "  _________
+/ ________ \\
+| U-01 NERV |
+\\ _________ /
+  99.6% SYNC"))
+
+    ; NET_INTERCEPT
+    (box :class "section" :orientation "v" :spacing 2
+      (label :class "section-label cyan" :halign "start" :text "NET_INTERCEPT")
+      (box :orientation "h" :spacing 4
         (label :class "net-label" :text "RX")
-        (scale :class "net-bar" :value {(jq net_data ".rx_pct") ?: 0} :min 0 :max 100 :active false :hexpand true)
-        (label :class "net-val" :text {(jq net_data ".rx_str") ?: "--"}))
-      (box :orientation "h" :spacing 6
+        (scale :class "net-bar rx-bar"
+               :value {jq(net_data, ".rx_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "net-val cyan" :text {jq(net_data, ".rx_str") ?: "--"}))
+      (box :orientation "h" :spacing 4
         (label :class "net-label" :text "TX")
-        (scale :class "net-bar" :value {(jq net_data ".tx_pct") ?: 0} :min 0 :max 100 :active false :hexpand true)
-        (label :class "net-val" :text {(jq net_data ".tx_str") ?: "--"})))
+        (scale :class "net-bar tx-bar"
+               :value {jq(net_data, ".tx_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "net-val teal" :text {jq(net_data, ".tx_str") ?: "--"})))
 
-    ; === MAGI SYS STATUS GRID ===
-    (box :class "status-section" :orientation "v" :spacing 2
-      (label :class "section-title" :text "MAGI_SYS_STATUS")
-      (box :orientation "h" :spacing 4 :halign "fill"
-        (box :class "stat-item" :orientation "v"
-          (label :class "stat-label" :text "CORE_SYNC")
-          (label :class "stat-val"
-                 :style "color:#50ff10;"
-                 :text {(jq magi_data ".core_sync") ?: "99.6%"}))
-        (box :class "stat-item" :orientation "v"
-          (label :class "stat-label" :text "DISK")
-          (label :class "stat-val"
-                 :style "color:#5090c8;"
-                 :text "${(jq magi_data '.disk_pct') ?: 0}%"))
-        (box :class "stat-item" :orientation "v"
-          (label :class "stat-label" :text "UPTIME")
-          (label :class "stat-val"
-                 :style "color:#50ff10;"
-                 :text uptime_str))))))
+    ; MAGI_DIAG
+    (box :class "section" :orientation "v" :spacing 2
+      (label :class "section-label orange" :halign "start" :text "MAGI_DIAG")
+      ; MELCHIOR bar
+      (box :class "diag-item mel-border" :orientation "v" :spacing 1
+        (label :class "diag-label mel" :halign "start" :text "MELCHIOR -- CPU")
+        (box :orientation "h" :spacing 4
+          (scale :class "diag-bar mel-bar"
+                 :value {jq(magi_data, ".melchior.value") ?: 0}
+                 :min 0 :max 100 :active false :hexpand true)
+          (label :class "diag-val mel" :text "${jq(magi_data, '.melchior.value') ?: 0}%")))
+      ; BALTHASAR bar
+      (box :class "diag-item bal-border" :orientation "v" :spacing 1
+        (label :class "diag-label bal" :halign "start" :text "BALTHASAR -- RAM")
+        (box :orientation "h" :spacing 4
+          (scale :class "diag-bar bal-bar"
+                 :value {jq(magi_data, ".balthasar.value") ?: 0}
+                 :min 0 :max 100 :active false :hexpand true)
+          (label :class "diag-val bal" :text "${jq(magi_data, '.balthasar.value') ?: 0}%")))
+      ; CASPAR bar
+      (box :class "diag-item cas-border" :orientation "v" :spacing 1
+        (label :class "diag-label cas" :halign "start" :text "CASPAR -- TEMP")
+        (box :orientation "h" :spacing 4
+          (scale :class "diag-bar cas-bar"
+                 :value {jq(magi_data, ".caspar.value") ?: 0}
+                 :min 0 :max 100 :active false :hexpand true)
+          (label :class "diag-val cas" :text "${jq(magi_data, '.caspar.value') ?: 0}C"))))
+
+    ; SYS_CONTROLS
+    (box :class "section" :orientation "v" :spacing 2 :vexpand true
+      (label :class "section-label orange" :halign "start" :text "SYS_CONTROLS")
+      (box :class "ctrl-row" :orientation "h" :spacing 4
+        (box :class "ctrl-dot on")
+        (label :class "ctrl-label" :text "Wi-Fi" :hexpand true)
+        (label :class "ctrl-val on" :text "ON"))
+      (box :class "ctrl-row" :orientation "h" :spacing 4
+        (box :class "ctrl-dot off")
+        (label :class "ctrl-label" :text "Bluetooth" :hexpand true)
+        (label :class "ctrl-val off" :text "OFF"))
+      (box :class "ctrl-row" :orientation "h" :spacing 4
+        (box :class "ctrl-dot on")
+        (label :class "ctrl-label" :text "Audio" :hexpand true)
+        (label :class "ctrl-val on" :text "72%"))
+      (box :class "ctrl-row" :orientation "h" :spacing 4
+        (box :class "ctrl-dot warn")
+        (label :class "ctrl-label" :text "Battery" :hexpand true)
+        (label :class "ctrl-val warn" :text "AC")))))
 
 ; ============================================================
-; WINDOW DEFINITION
+; BOTTOM PANEL — HOME_DIR + KEYBOARD + SYS_STATUS + HOTKEYS
 ; ============================================================
-(defwindow magi-main
+(defwidget bottom-panel-widget []
+  (box :class "panel bottom-panel" :orientation "h" :spacing 0
+    ; HOME_DIRECTORY
+    (box :class "bottom-cell" :orientation "v" :spacing 0 :hexpand true
+      (label :class "section-label green" :halign "start" :text "HOME_DIRECTORY")
+      (label :class "file-text" :halign "start" :valign "start"
+             :wrap true :text file_list))
+    ; KEYBOARD_SENSOR
+    (box :class "bottom-cell" :orientation "v" :spacing 0 :hexpand true
+      (label :class "section-label green" :halign "start" :text "KEYBOARD_SENSOR")
+      (label :class "kbd-text" :halign "start" :valign "start"
+             :wrap true :text kbd_data))
+    ; MAGI_SYS_STATUS
+    (box :class "bottom-cell" :orientation "v" :spacing 2 :hexpand true
+      (label :class "section-label orange" :halign "start" :text "MAGI_SYS_STATUS")
+      (box :class "status-grid" :orientation "v" :spacing 2
+        (box :orientation "h" :spacing 8
+          (box :orientation "v"
+            (label :class "stat-label" :text "CORE_SYNC")
+            (label :class "stat-val green" :text "99.6%"))
+          (box :orientation "v"
+            (label :class "stat-label" :text "VBAR_SAT")
+            (label :class "stat-val blue" :text "${jq(magi_data, '.balthasar.value') ?: 0}%")))
+        (box :orientation "h" :spacing 8
+          (box :orientation "v"
+            (label :class "stat-label" :text "THERMAL")
+            (label :class "stat-val yellow" :text "${jq(magi_data, '.caspar.value') ?: 0}C"))
+          (box :orientation "v"
+            (label :class "stat-label" :text "UPTIME")
+            (label :class "stat-val green" :text uptime_str)))
+        (box :orientation "h" :spacing 8
+          (box :orientation "v"
+            (label :class "stat-label" :text "DISK")
+            (label :class "stat-val green" :text "${jq(magi_data, '.disk_pct') ?: 0}%"))
+          (box :orientation "v"
+            (label :class "stat-label" :text "LLM")
+            (label :class "stat-val blue" :text "LIVE")))))
+    ; HOTKEYS
+    (box :class "bottom-cell" :orientation "v" :spacing 0 :hexpand true
+      (label :class "section-label blue" :halign "start" :text "HOTKEYS")
+      (label :class "hotkey-text" :halign "start" :valign "start"
+             :text "Win+Enter  terminal
+Win+[1-9]  workspace
+Win+d      launcher
+Win+Shift+q close
+Win+Shift+e exit i3
+Win+f      fullscreen"))))
+
+; ============================================================
+; WINDOW DEFINITIONS
+; ============================================================
+
+; LEFT PANEL — from polybar (24px) to tiling bottom (y=960)
+; Height = 960 - 24 = 936px
+(defwindow left-panel
   :monitor 0
   :geometry (geometry
-    :x      "1640px"
-    :y      "24px"
-    :width  "280px"
-    :height "760px"
+    :x "0px" :y "24px"
+    :width "280px" :height "936px"
     :anchor "top left")
   :stacking "fg"
   :focusable false
-  :namespace "eva-magi"
-  (magi-main))
+  :namespace "eva-left-panel"
+  (left-panel-widget))
 
-; ============================================================
-; CIRCUIT BORDER OVERLAY WINDOW
-; Full-screen transparent SVG — animated circuit traces
-; ============================================================
-(defwidget circuit-overlay []
-  (box :class "overlay-root"
-    (literal :content `~/.config/eva-shell/scripts/circuit-overlay.sh`)))
+; MAGI CENTER removed — now runs as a tiling kitty terminal in i3
 
-(defwindow circuit-overlay
+; RIGHT PANEL — anchored top-right, below polybar
+; Height = 960 - 24 = 936px
+(defwindow right-panel
+  :monitor 0
+  :geometry (geometry
+    :x "0px" :y "24px"
+    :width "280px" :height "936px"
+    :anchor "top right")
+  :stacking "fg"
+  :focusable false
+  :namespace "eva-right-panel"
+  (right-panel-widget))
+
+; BOTTOM PANEL — anchored to bottom of screen, 1920x90
+; :reserve tells WM to reserve space (like a dock/taskbar)
+(defwindow bottom-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "0px"
-    :width  "1920px"
-    :height "1080px"
-    :anchor "top left")
-  :stacking "bg"
+    :width "1920px" :height "90px"
+    :anchor "bottom left")
+  :stacking "fg"
   :focusable false
-  :pass-through true
-  :namespace "eva-overlay"
-  (circuit-overlay))
+  :reserve (struts :distance "120px" :side "bottom")
+  :windowtype "dock"
+  :namespace "eva-bottom-panel"
+  (bottom-panel-widget))

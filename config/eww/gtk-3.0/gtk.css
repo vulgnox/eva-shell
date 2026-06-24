@@ -1,0 +1,9 @@
+/* Override all GTK backgrounds to pure black for eww */
+* {
+  background-color: #000000;
+  background-image: none;
+}
+
+window {
+  background-color: #000000;
+}

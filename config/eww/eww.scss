@@ -1,308 +1,466 @@
 // ============================================================
 // EVA-SHELL — eww.scss
-// MAGI Panel — Exact NGE colors + animated circuit borders
+// MAGI SUPERCOMPUTER — Full HUD Styling
+// Uses ONLY GTK3-compatible CSS properties
 // ============================================================
 
-// PALETTE
-$bg:        #000000;
-$bg-panel:  #050200;
-$bg-unit:   #080400;
-$orange:    #ec7420;
-$orange-hi: #ff8c00;
-$teal:      #60f0a0;
-$teal-hi:   #3cffd0;
-$blue:      #5090c8;
-$green:     #50ff10;
-$green-dim: #409820;
-$yellow:    #f4b000;
-$red:       #f02020;
-$dim:       #484848;
-$dim2:      #1a0d00;
+// --- Color variables ---
+$bg:         #000000;
+$border-grn: #1a3a10;
+$border-dim: #0a1a08;
+$border-dk:  #0a2a18;
+$orange:     #ec7420;
+$green:      #50ff10;
+$green-dim:  #409820;
+$teal:       #60f0a0;
+$teal-hi:    #3cffd0;
+$blue:       #5090c8;
+$yellow:     #f4b000;
+$red:        #f02020;
+$dim:        #484848;
+$dead:       #1a2a10;
 
 // ============================================================
-// ANIMATED CIRCUIT BORDER KEYFRAMES
-// ============================================================
-@keyframes circuit-flow {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 200% 0%; }
-}
-
-@keyframes circuit-flow-v {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 0% 200%; }
-}
-
-@keyframes pulse-glow {
-  0%,100% { opacity: 1; box-shadow: 0 0 4px $orange; }
-  50%      { opacity: 0.6; box-shadow: 0 0 8px $orange, 0 0 16px rgba(236,116,32,0.3); }
-}
-
-@keyframes blink-cursor {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0; }
-}
-
-@keyframes dot-pulse {
-  0%,100% { transform: scale(1); opacity: 1; }
-  50%      { transform: scale(1.3); opacity: 0.7; }
-}
-
-@keyframes scan-sweep {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 0% 100%; }
-}
-
-// ============================================================
-// ROOT
+// GLOBAL RESET
 // ============================================================
 * {
-  all: unset;
-  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: $dim;
+  background-color: $bg;
+  background-image: none;
+  border-width: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+}
+
+window {
+  background-color: $bg;
+}
+
+// ============================================================
+// PANELS
+// ============================================================
+.panel {
+  background-color: $bg;
+}
+
+.left-panel {
+  padding: 4px 3px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-color: $orange;
+  border-bottom-color: $orange;
+  border-left-color: $orange;
+  border-right-color: $border-grn;
+}
+
+.right-panel {
+  padding: 4px 3px 4px 5px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-color: $orange;
+  border-bottom-color: $orange;
+  border-left-color: $border-grn;
+  border-right-color: $orange;
+}
+
+.bottom-panel {
+  padding: 0;
+  border-top-width: 1px;
+  border-top-color: $orange;
+}
+
+// ============================================================
+// SECTION LABELS
+// ============================================================
+.section {
+  padding: 4px 0;
+}
+
+.section-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding-bottom: 2px;
+  margin-bottom: 3px;
+  border-bottom-width: 1px;
+  border-bottom-color: $border-dim;
   color: $orange;
-  box-sizing: border-box;
 }
 
-.magi-root {
-  background: $bg;
-  min-height: 100%;
+.section-label.green {
+  color: $green-dim;
+  border-bottom-color: $border-dim;
+}
 
-  // === ANIMATED CIRCUIT BORDER ===
-  // Left edge: flowing orange circuit trace
-  border-left: 2px solid transparent;
-  background-image:
-    // scanline texture
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgba(236,116,32,0.008) 3px,
-      rgba(236,116,32,0.008) 4px
-    ),
-    // animated left border circuit trace
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      $orange 20%,
-      $orange-hi 30%,
-      transparent 50%,
-      $dim2 60%,
-      $orange 80%,
-      transparent 100%
-    );
-  background-size: 100% 100%, 2px 300%;
-  background-position: 0 0, 0 0;
-  background-repeat: no-repeat;
-  animation: circuit-flow-v 3s linear infinite;
-  padding: 0 0 0 4px;
+.section-label.cyan {
+  color: $teal;
+  border-bottom-color: $border-dk;
+}
+
+.section-label.blue {
+  color: $blue;
+  border-bottom-color: #0a1a28;
+}
+
+.section-label.orange {
+  color: $orange;
+  border-bottom-color: $border-grn;
 }
 
 // ============================================================
-// HEADER
+// LEFT PANEL — LOGS + PROCESS
 // ============================================================
-.magi-header {
-  padding: 6px 4px 4px;
-  border-bottom: 1px solid $dim2;
-  background: linear-gradient(180deg, rgba(236,116,32,0.05) 0%, transparent 100%);
+.log-container {
+  min-height: 180px;
+}
+
+.log-text {
+  font-size: 9px;
+  color: $green-dim;
+}
+
+.proc-text {
+  font-size: 9px;
+  color: $teal;
+}
+
+// ============================================================
+// RIGHT PANEL
+// ============================================================
+.ascii-art {
+  font-size: 9px;
+  color: $orange;
+  padding: 4px 2px;
+  margin-bottom: 3px;
+}
+
+// Net bars
+.net-label {
+  font-size: 9px;
+  color: $dim;
+  min-width: 22px;
+}
+
+.net-val.cyan {
+  font-size: 9px;
+  color: $teal;
+}
+
+.net-val.teal {
+  font-size: 9px;
+  color: $teal-hi;
+}
+
+// MAGI DIAG
+.diag-item {
+  padding: 2px 0 2px 6px;
+  margin: 2px 0;
+  border-left-width: 2px;
+  border-left-color: $dim;
+}
+
+.diag-item.mel-border {
+  border-left-color: $blue;
+}
+
+.diag-item.bal-border {
+  border-left-color: $orange;
+}
+
+.diag-item.cas-border {
+  border-left-color: $teal;
+}
+
+.diag-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.diag-label.mel {
+  color: $blue;
+}
+
+.diag-label.bal {
+  color: $orange;
+}
+
+.diag-label.cas {
+  color: $teal;
+}
+
+.diag-val {
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.diag-val.mel {
+  color: $blue;
+}
+
+.diag-val.bal {
+  color: $orange;
+}
+
+.diag-val.cas {
+  color: $teal;
+}
+
+// Scale widgets (progress bars)
+scale trough {
+  min-height: 4px;
+  background-color: #0a0a0a;
+  border-width: 1px;
+  border-color: $border-grn;
+  border-radius: 0;
+}
+
+scale trough highlight {
+  border-radius: 0;
+  min-height: 4px;
+}
+
+scale slider {
+  min-width: 0;
+  min-height: 0;
+  background-color: transparent;
+}
+
+// Specific bar colors
+.mel-bar trough highlight {
+  background-color: $blue;
+}
+
+.bal-bar trough highlight {
+  background-color: $orange;
+}
+
+.cas-bar trough highlight {
+  background-color: $teal;
+}
+
+.rx-bar trough highlight {
+  background-color: $teal;
+}
+
+.tx-bar trough highlight {
+  background-color: $teal-hi;
+}
+
+// Controls
+.ctrl-row {
+  padding: 2px 0;
+}
+
+.ctrl-dot {
+  min-width: 6px;
+  min-height: 6px;
+  border-radius: 50%;
+}
+
+.ctrl-dot.on {
+  background-color: $green;
+}
+
+.ctrl-dot.off {
+  background-color: $dead;
+}
+
+.ctrl-dot.warn {
+  background-color: $yellow;
+}
+
+.ctrl-label {
+  font-size: 9px;
+  color: $dim;
+}
+
+.ctrl-val.on {
+  font-size: 9px;
+  color: $green;
+}
+
+.ctrl-val.off {
+  font-size: 9px;
+  color: $dim;
+}
+
+.ctrl-val.warn {
+  font-size: 9px;
+  color: $yellow;
+}
+
+// ============================================================
+// BOTTOM PANEL
+// ============================================================
+.bottom-cell {
+  padding: 4px 6px;
+  border-right-width: 1px;
+  border-right-color: $border-grn;
+  min-height: 80px;
+}
+
+.file-text {
+  font-size: 9px;
+  color: $teal;
+}
+
+.kbd-text {
+  font-size: 9px;
+  color: $green;
+}
+
+.kbd-meta {
+  font-size: 8px;
+  color: $dim;
+}
+
+// Status values
+.stat-label {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: $dim;
+}
+
+.stat-val {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.stat-val.green {
+  color: $green;
+}
+
+.stat-val.blue {
+  color: $blue;
+}
+
+.stat-val.yellow {
+  color: $yellow;
+}
+
+// Hotkeys
+.hotkey-text {
+  font-size: 9px;
+  color: $dim;
+}
+
+// ============================================================
+// MAGI CENTER (used by TUI — kept for reference)
+// ============================================================
+.magi-center-panel {
+  border-bottom-width: 1px;
+  border-bottom-color: $orange;
+  padding: 4px 6px 0;
 }
 
 .corner-box {
-  border: 1px solid $orange;
-  padding: 3px 5px;
-  background: rgba(236,116,32,0.05);
-  animation: pulse-glow 3s ease-in-out infinite;
+  border-width: 1px;
+  border-color: $orange;
+  padding: 3px 6px;
 }
 
-.corner-label { font-size: 6px; color: $orange; letter-spacing: 1px; }
-.corner-val   { font-size: 10px; font-weight: bold; color: $orange; letter-spacing: 1px; }
-.corner-sub   { font-size: 5px; color: $green-dim; letter-spacing: 1px; }
-
-.magi-title-center { padding: 0 6px; }
-.magi-main-title { font-size: 11px; font-weight: bold; color: $orange; letter-spacing: 4px; }
-.magi-sub-title  { font-size: 6px; color: $green-dim; letter-spacing: 2px; }
-
-// ============================================================
-// CONSENSUS BAR
-// ============================================================
-.consensus-bar { margin-top: 4px; }
-
-.consensus-row { }
-.cdot {
-  min-width: 7px;
-  min-height: 7px;
-  border-radius: 50%;
-  animation: dot-pulse 2s ease-in-out infinite;
-}
-.clabel { font-size: 6px; color: $dim; letter-spacing: 1px; }
-.consensus-label { font-size: 6px; color: $green; letter-spacing: 1px; margin-left: 4px; }
-
-// ============================================================
-// CLOCK STRIP
-// ============================================================
-.clock-strip {
-  padding: 3px 4px;
-  border-bottom: 1px solid $dim2;
-  background: rgba(236,116,32,0.03);
-
-  // animated top border circuit trace (horizontal)
-  border-top: 1px solid transparent;
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    $orange 15%,
-    $teal 25%,
-    transparent 40%,
-    $dim2 55%,
-    $orange 70%,
-    transparent 100%
-  );
-  background-size: 300% 1px;
-  background-repeat: no-repeat;
-  background-position: 0% bottom;
-  animation: circuit-flow 4s linear infinite;
-}
-
-.clock-date { font-size: 8px; color: $orange; letter-spacing: 2px; }
-.clock-time { font-size: 9px; font-weight: bold; color: $green; letter-spacing: 2px; }
-.clock-sep  { font-size: 7px; color: $dim; }
-.clock-loc  { font-size: 6px; color: $dim; letter-spacing: 1px; }
-
-// ============================================================
-// MAGI UNITS
-// ============================================================
-.magi-units-row { padding: 6px 4px 4px; }
-
-.magi-unit-wrap {
-  flex: 1;
-  padding: 5px 4px;
-  border: 1px solid $dim2;
-  background: $bg-panel;
-  position: relative;
-  // animated corner accent
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0;
-    width: 8px; height: 8px;
-    border-top: 1px solid $orange;
-    border-left: 1px solid $orange;
-  }
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0; right: 0;
-    width: 8px; height: 8px;
-    border-bottom: 1px solid $orange;
-    border-right: 1px solid $orange;
-  }
-}
-
-.magi-unit-name { font-size: 7px; font-weight: bold; letter-spacing: 2px; }
-.magi-unit-sub  { font-size: 5px; color: $dim; letter-spacing: 1px; }
-.magi-unit-val  { font-size: 11px; font-weight: bold; }
-
-.magi-bar {
-  min-height: 5px;
-  margin: 3px 0;
-
-  trough {
-    background: $bg;
-    border: 1px solid $dim2;
-    border-radius: 0;
-    min-height: 5px;
-  }
-  highlight, progress {
-    border-radius: 0;
-    // glow effect on fill
-    box-shadow: 0 0 4px currentColor;
-  }
-}
-
-.magi-center-diamond {
-  width: 60px;
-  padding: 8px 4px;
-  border: 1px solid $orange;
-  background: rgba(236,116,32,0.08);
-  animation: pulse-glow 2.5s ease-in-out infinite;
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-
-.diamond-label { font-size: 9px; font-weight: bold; color: $orange; text-align: center; }
-.diamond-sub   { font-size: 8px; color: $orange; text-align: center; }
-
-.caspar-row { padding: 0 4px 4px; }
-
-// ============================================================
-// LLM OUTPUT
-// ============================================================
-.llm-section {
-  padding: 4px;
-  margin: 0 4px;
-  border: 1px solid $blue;
-  background: rgba(80,144,200,0.04);
-  position: relative;
-
-  // animated top circuit trace - blue for MELCHIOR
-  &::before {
-    content: "";
-    position: absolute;
-    top: -1px; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, $blue 30%, $teal 50%, $blue 70%, transparent);
-    background-size: 200% 100%;
-    animation: circuit-flow 3s linear infinite;
-  }
-}
-
-.llm-header {
-  font-size: 6px;
-  color: $blue;
-  letter-spacing: 2px;
-  border-bottom: 1px solid $dim2;
-  padding-bottom: 2px;
-  margin-bottom: 3px;
-}
-
-.llm-box { background: $bg; padding: 4px; }
-.llm-timestamp { font-size: 5px; color: $dim; letter-spacing: 1px; margin-bottom: 2px; }
-.llm-text {
-  font-size: 7px;
-  color: $teal;
-  line-height: 1.4;
-  // blinking cursor via pseudo (eww limitation: use label after text)
-}
-
-// ============================================================
-// NET / STATUS SECTIONS
-// ============================================================
-.net-section, .status-section {
-  padding: 4px;
-  border-top: 1px solid $dim2;
-  margin-top: 2px;
-}
-
-.section-title {
-  font-size: 6px;
+.corner-label {
+  font-size: 8px;
+  letter-spacing: 1px;
   color: $orange;
-  letter-spacing: 2px;
-  border-bottom: 1px solid $dim2;
-  padding-bottom: 2px;
-  margin-bottom: 3px;
 }
 
-.net-label { font-size: 6px; color: $dim; width: 16px; }
-.net-val   { font-size: 6px; color: $teal; width: 36px; text-align: right; }
-.net-bar {
-  trough   { background: $bg; border: 1px solid $dim2; min-height: 4px; border-radius: 0; }
-  highlight, progress { background: $teal; border-radius: 0; }
+.corner-val {
+  font-size: 13px;
+  font-weight: bold;
+  color: $orange;
 }
 
-.stat-item { flex: 1; }
-.stat-label { font-size: 5px; color: $dim; letter-spacing: 1px; }
-.stat-val   { font-size: 9px; font-weight: bold; }
+.magi-main-title {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: $orange;
+  font-weight: bold;
+}
 
-// ============================================================
-// CONSENSUS DOT OVERRIDE PER UNIT
-// ============================================================
-.magi-unit-wrap:nth-child(1) { border-left: 2px solid $blue; }
-.magi-unit-wrap:nth-child(3) { border-left: 2px solid $orange; }
-.caspar-row .magi-unit-wrap  { border-left: 2px solid $teal; }
+.magi-sub-title {
+  font-size: 8px;
+  color: $green-dim;
+}
+
+.cdot {
+  min-width: 8px;
+  min-height: 8px;
+  border-radius: 50%;
+  background-color: $green;
+}
+
+.consensus-label {
+  font-size: 8px;
+  color: $green-dim;
+}
+
+.consensus-ok {
+  font-size: 8px;
+  color: $green;
+}
+
+.unit-name.mel {
+  font-size: 10px;
+  font-weight: bold;
+  color: $blue;
+}
+
+.unit-name.bal {
+  font-size: 10px;
+  font-weight: bold;
+  color: $orange;
+}
+
+.unit-name.cas {
+  font-size: 10px;
+  font-weight: bold;
+  color: $teal;
+}
+
+.unit-sub {
+  font-size: 8px;
+  color: $dim;
+}
+
+.unit-val.mel {
+  font-size: 9px;
+  color: $blue;
+}
+
+.unit-val.bal {
+  font-size: 9px;
+  color: $orange;
+}
+
+.unit-val.cas {
+  font-size: 9px;
+  color: $teal;
+}
+
+.magi-diamond {
+  border-width: 2px;
+  border-color: $orange;
+  padding: 8px 12px;
+  background-color: #050500;
+}
+
+.diamond-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: $orange;
+}
+
+.diamond-sub {
+  font-size: 11px;
+  color: $orange;
+}
