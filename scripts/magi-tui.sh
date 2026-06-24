@@ -2,13 +2,13 @@
 # ============================================================
 # EVA-SHELL — magi-tui.sh
 # MAGI SUPERCOMPUTER TUI — runs inside a kitty terminal
-# Displays MAGI hexagonal ring SVG (via kitty icat) + stats
+# Displays MAGI hexagonal ring SVG (via kitty graphics protocol) + stats
 # Falls back to text-only mode if image tools unavailable
 # Tiles with the working terminal in i3 center workspace
 # ============================================================
 
 tput civis
-trap 'tput cnorm; kitty +kitten icat --clear 2>/dev/null; exit' INT TERM EXIT
+trap 'tput cnorm; printf "\033_Ga=d,d=A;\033\\"; exit' INT TERM EXIT
 
 CACHE_DIR="$HOME/.cache/eva-shell"
 mkdir -p "$CACHE_DIR"
@@ -42,6 +42,9 @@ fi
 # Pre-generate separator line (max 300 chars)
 SEP_LINE=$(printf '─%.0s' {1..300})
 
+# Pre-compute base64 of PNG path (used by kitty graphics protocol, never changes)
+PATH_B64=$(printf '%s' "$PNG_FILE" | base64 -w0)
+
 draw_bar() {
     local val=$1 max=$2 width=$3 color=$4
     local filled=$(( val * width / max ))
@@ -70,21 +73,24 @@ while true; do
         SVG_PATH=$("$SCRIPT_DIR/magi-ring.sh" 2>/dev/null)
 
         if [ -f "$SVG_PATH" ]; then
+            # Write to temp file and atomic-move to prevent partial reads
             if [ "$SVG_CONVERTER" = "rsvg-convert" ]; then
-                rsvg-convert -w 1200 -h 600 "$SVG_PATH" -o "$PNG_FILE" 2>/dev/null
+                rsvg-convert -w 1200 -h 600 "$SVG_PATH" -o "${PNG_FILE}.tmp" 2>/dev/null
             else
-                convert -background black -resize 1200x600 "$SVG_PATH" "$PNG_FILE" 2>/dev/null
+                convert -background black -resize 1200x600 "$SVG_PATH" "${PNG_FILE}.tmp" 2>/dev/null
             fi
+            mv -f "${PNG_FILE}.tmp" "$PNG_FILE" 2>/dev/null
 
             # Image fills top area; leave 6 rows for text below
             IMG_W=$((COLS - 2))
             IMG_H=$((ROWS - 6))
             [ $IMG_H -lt 4 ] && IMG_H=4
 
-            # Delete old images via kitty graphics protocol, then place new
-            printf '\033_Ga=d,d=A;\033\\'
-            kitty +kitten icat --place ${IMG_W}x${IMG_H}@1x0 \
-                --transfer-mode file "$PNG_FILE" 2>/dev/null
+            # Atomic image update via kitty graphics protocol
+            # Transmit PNG with id=1 — replaces old image+placement instantly
+            # (no subprocess spawn = no gap = zero flicker)
+            printf '\033[1;2H'
+            printf "\033_Gi=1,f=100,a=T,t=f,c=%d,r=%d,C=1;%s\033\\\\" "$IMG_W" "$IMG_H" "$PATH_B64"
         fi
 
         # Text area: fixed rows at bottom
