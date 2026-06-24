@@ -12,7 +12,8 @@ SECOND=$(date +%s)
 FRAME=$(( (SECOND / 3) % 4 ))
 
 # CPU-based sync ratio
-SYNC=$(top -bn1 2>/dev/null | awk '/Cpu\(s\)/{printf "%.1f", 100-$8}' || echo "99.6")
+SYNC=$(top -bn1 2>/dev/null | awk '/Cpu\(s\)/{printf "%.1f", 100-$8}')
+SYNC="${SYNC:-99.6}"
 
 case $FRAME in
     0)
