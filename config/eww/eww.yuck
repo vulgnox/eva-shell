@@ -1,17 +1,5 @@
 ; ============================================================
 ; EVA-SHELL — eww.yuck
-<<<<<<< HEAD
-; MAGI SUPERCOMPUTER — Full Panel
-; Animated circuit borders via CSS + live data
-; ============================================================
-
-; ============================================================
-; POLLS
-; ============================================================
-(defpoll magi_data   :interval "2s"  :initial "{}" `~/.config/eva-shell/scripts/magi-stats.sh`)
-(defpoll mel_llm     :interval "30s" :initial "Initializing MELCHIOR analysis..." `~/.config/eva-shell/scripts/melchior.sh`)
-(defpoll net_data    :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/net-stats.sh`)
-=======
 ; MAGI SUPERCOMPUTER — Full HUD Panel System
 ; 4 windows: left-panel, magi-center, right-panel, bottom-panel
 ; No overlap with center workspace (i3 gaps handle separation)
@@ -27,175 +15,11 @@
 (defpoll proc_data   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/proc-poll.sh`)
 (defpoll file_list   :interval "10s" :initial "" `~/.config/eva-shell/scripts/file-poll.sh`)
 (defpoll kbd_data    :interval "1s"  :initial "" `~/.config/eva-shell/scripts/kbd-poll.sh`)
->>>>>>> 1d6cbfc7201bf57776b934353a4c5e0667121e38
 (defpoll clock_time  :interval "1s"  :initial "00:00:00" `date '+%H:%M:%S'`)
 (defpoll clock_date  :interval "60s" :initial "0000.00.00" `date '+%Y.%m.%d'`)
 (defpoll uptime_str  :interval "30s" :initial "--" `uptime -p | sed 's/up //'`)
 
 ; ============================================================
-<<<<<<< HEAD
-; MAGI CONSENSUS LOGIC
-; ============================================================
-(defwidget consensus-dot [color label]
-  (box :class "consensus-row" :spacing 4 :orientation "h"
-    (box :class "cdot" :style "background:${color};")
-    (label :class "clabel" :text label)))
-
-; ============================================================
-; SINGLE MAGI UNIT BLOCK
-; ============================================================
-(defwidget magi-unit [unit-name sub-name value unit color llm-flag]
-  (box :class "magi-unit-wrap" :orientation "v" :spacing 2
-    (box :class "magi-unit-header" :orientation "h" :spacing 4
-      (label :class "magi-unit-name" :style "color:${color};" :text unit-name)
-      (label :class "magi-unit-sub"  :text sub-name))
-    (scale :class "magi-bar"
-           :value {value ?: 0}
-           :min 0 :max 100
-           :active false
-           :style "color:${color};")
-    (box :orientation "h" :halign "end"
-      (label :class "magi-unit-val" :style "color:${color};"
-             :text "${value}${unit}"))))
-
-; ============================================================
-; MAIN MAGI PANEL
-; ============================================================
-(defwidget magi-main []
-  (box :class "magi-root" :orientation "v" :spacing 0
-
-    ; === TOP: DANANG HEADER ===
-    (box :class "magi-header" :orientation "h" :halign "fill"
-      (box :class "corner-box corner-left" :orientation "v"
-        (label :class "corner-label" :text "DANANG TYPE-B")
-        (label :class "corner-val"   :text "PROTECT NO.666")
-        (label :class "corner-sub"   :text "on MAGI-01 ORIGINAL"))
-      (box :class "magi-title-center" :orientation "v" :halign "center" :hexpand true
-        (label :class "magi-main-title" :text "MAGI — 01")
-        (label :class "magi-sub-title"  :text "on MAGI-01 ORIGINAL")
-        (box :class "consensus-bar" :orientation "h" :halign "center" :spacing 8
-          (consensus-dot :color {(jq magi_data ".melchior.color") ?: "#50ff10"} :label "MEL")
-          (consensus-dot :color {(jq magi_data ".balthasar.color") ?: "#50ff10"} :label "BAL")
-          (consensus-dot :color {(jq magi_data ".caspar.color") ?: "#50ff10"} :label "CAS")
-          (label :class "consensus-label" :text "3/3 CONSENSUS")))
-      (box :class "corner-box corner-right" :orientation "v" :halign "end"
-        (label :class "corner-label" :text "TIME TO COLLAPSE")
-        (label :class "corner-val"   :text {uptime_str})
-        (label :class "corner-sub"   :text "sec.")))
-
-    ; === CLOCK STRIP ===
-    (box :class "clock-strip" :orientation "h" :halign "center" :spacing 10
-      (label :class "clock-date" :text clock_date)
-      (label :class "clock-sep"  :text "//")
-      (label :class "clock-time" :text clock_time)
-      (label :class "clock-sep"  :text "//")
-      (label :class "clock-loc"  :text "TOKYO-3 // GEO-FRONT"))
-
-    ; === MAGI UNITS ===
-    (box :class "magi-units-row" :orientation "h" :spacing 6 :halign "fill"
-      (magi-unit
-        :unit-name "MELCHIOR"
-        :sub-name  "CEREBRUM // LLM"
-        :value     {(jq magi_data ".melchior.value") ?: 0}
-        :unit      "%"
-        :color     "#5090c8"
-        :llm-flag  "true")
-      (box :class "magi-center-diamond" :orientation "v" :halign "center" :valign "center"
-        (label :class "diamond-label" :text "MAGI")
-        (label :class "diamond-sub"   :text "01"))
-      (magi-unit
-        :unit-name "BALTHASAR"
-        :sub-name  "CALLOSUM // MEM"
-        :value     {(jq magi_data ".balthasar.value") ?: 0}
-        :unit      "%"
-        :color     "#ec7420"
-        :llm-flag  "false"))
-
-    (box :class "caspar-row" :orientation "h" :halign "center"
-      (magi-unit
-        :unit-name "CASPAR"
-        :sub-name  "MEDULLA // ENV"
-        :value     {(jq magi_data ".caspar.value") ?: 0}
-        :unit      "°C"
-        :color     "#60f0a0"
-        :llm-flag  "false"))
-
-    ; === MELCHIOR LLM OUTPUT ===
-    (box :class "llm-section" :orientation "v" :spacing 3
-      (label :class "llm-header" :text "MELCHIOR // CEREBRUM OUTPUT")
-      (box :class "llm-box" :orientation "v"
-        (label :class "llm-timestamp" :text "ANALYSIS — ${clock_time}")
-        (label :class "llm-text" :wrap true :text mel_llm)))
-
-    ; === NET STATS ===
-    (box :class "net-section" :orientation "v" :spacing 2
-      (label :class "section-title" :text "NET_INTERCEPT")
-      (box :orientation "h" :spacing 6
-        (label :class "net-label" :text "RX")
-        (scale :class "net-bar" :value {(jq net_data ".rx_pct") ?: 0} :min 0 :max 100 :active false :hexpand true)
-        (label :class "net-val" :text {(jq net_data ".rx_str") ?: "--"}))
-      (box :orientation "h" :spacing 6
-        (label :class "net-label" :text "TX")
-        (scale :class "net-bar" :value {(jq net_data ".tx_pct") ?: 0} :min 0 :max 100 :active false :hexpand true)
-        (label :class "net-val" :text {(jq net_data ".tx_str") ?: "--"})))
-
-    ; === MAGI SYS STATUS GRID ===
-    (box :class "status-section" :orientation "v" :spacing 2
-      (label :class "section-title" :text "MAGI_SYS_STATUS")
-      (box :orientation "h" :spacing 4 :halign "fill"
-        (box :class "stat-item" :orientation "v"
-          (label :class "stat-label" :text "CORE_SYNC")
-          (label :class "stat-val"
-                 :style "color:#50ff10;"
-                 :text {(jq magi_data ".core_sync") ?: "99.6%"}))
-        (box :class "stat-item" :orientation "v"
-          (label :class "stat-label" :text "DISK")
-          (label :class "stat-val"
-                 :style "color:#5090c8;"
-                 :text "${(jq magi_data '.disk_pct') ?: 0}%"))
-        (box :class "stat-item" :orientation "v"
-          (label :class "stat-label" :text "UPTIME")
-          (label :class "stat-val"
-                 :style "color:#50ff10;"
-                 :text uptime_str))))))
-
-; ============================================================
-; WINDOW DEFINITION
-; ============================================================
-(defwindow magi-main
-  :monitor 0
-  :geometry (geometry
-    :x      "1640px"
-    :y      "24px"
-    :width  "280px"
-    :height "760px"
-    :anchor "top left")
-  :stacking "fg"
-  :focusable false
-  :namespace "eva-magi"
-  (magi-main))
-
-; ============================================================
-; CIRCUIT BORDER OVERLAY WINDOW
-; Full-screen transparent SVG — animated circuit traces
-; ============================================================
-(defwidget circuit-overlay []
-  (box :class "overlay-root"
-    (literal :content `~/.config/eva-shell/scripts/circuit-overlay.sh`)))
-
-(defwindow circuit-overlay
-  :monitor 0
-  :geometry (geometry
-    :x "0px" :y "0px"
-    :width  "1920px"
-    :height "1080px"
-    :anchor "top left")
-  :stacking "bg"
-  :focusable false
-  :pass-through true
-  :namespace "eva-overlay"
-  (circuit-overlay))
-=======
 ; LEFT PANEL — SYS_LOG_STREAM + PROCESS_TREE
 ; ============================================================
 (defwidget left-panel-widget []
@@ -413,11 +237,40 @@ Win+Shift+e exit i3
 Win+f      fullscreen"))))
 
 ; ============================================================
+; TOPBAR — NERV header with live timestamp
+; ============================================================
+(defwidget topbar-widget []
+  (box :class "topbar" :orientation "h" :spacing 0 :hexpand true
+    ; LEFT — NERV identification
+    (box :class "tb-left" :halign "start" :hexpand true
+      (label :class "tb-text tb-dim" :text "NERV-HQ // GEO-FRONT // MAGI-01-ORIGINAL // SECTION-1"))
+    ; CENTER — DANANG defense screen label
+    (box :class "tb-center" :halign "center"
+      (label :class "tb-text tb-or" :text "◈ DANANG TYPE-B DEFENSE SCREEN ◈"))
+    ; RIGHT — live timestamp + clearance
+    (box :class "tb-right" :halign "end" :hexpand true
+      (label :class "tb-text tb-gr" :text "${clock_date} // ${clock_time} // CLEARANCE-AAA"))))
+
+; ============================================================
 ; WINDOW DEFINITIONS
 ; ============================================================
 
-; LEFT PANEL — from polybar (24px) to tiling bottom (y=960)
-; Height = 960 - 24 = 936px
+; TOPBAR — full-width, 16px, anchored to top of screen
+(defwindow magi-topbar
+  :monitor 0
+  :geometry (geometry
+    :x "0px" :y "0px"
+    :width "1920px" :height "24px"
+    :anchor "top left")
+  :stacking "fg"
+  :focusable false
+  :windowtype "dock"
+  :reserve (struts :distance "24px" :side "top")
+  :namespace "eva-topbar"
+  (topbar-widget))
+
+; LEFT PANEL — below topbar (24px) to bottom panel edge
+; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
 (defwindow left-panel
   :monitor 0
   :geometry (geometry
@@ -429,10 +282,8 @@ Win+f      fullscreen"))))
   :namespace "eva-left-panel"
   (left-panel-widget))
 
-; MAGI CENTER removed — now runs as a tiling kitty terminal in i3
-
-; RIGHT PANEL — anchored top-right, below polybar
-; Height = 960 - 24 = 936px
+; RIGHT PANEL — anchored top-right, below topbar
+; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
 (defwindow right-panel
   :monitor 0
   :geometry (geometry
@@ -458,4 +309,3 @@ Win+f      fullscreen"))))
   :windowtype "dock"
   :namespace "eva-bottom-panel"
   (bottom-panel-widget))
->>>>>>> 1d6cbfc7201bf57776b934353a4c5e0667121e38

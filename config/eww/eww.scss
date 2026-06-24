@@ -465,47 +465,82 @@ scale slider {
   color: $orange;
 }
 
-.llm-box { background: $bg; padding: 4px; }
+.llm-box { background-color: $bg; padding: 4px; }
 .llm-timestamp { font-size: 5px; color: $dim; letter-spacing: 1px; margin-bottom: 2px; }
 .llm-text {
   font-size: 7px;
   color: $teal;
-  line-height: 1.4;
-  // blinking cursor via pseudo (eww limitation: use label after text)
+  // line-height not supported in GTK3 CSS
 }
 
 // ============================================================
-// NET / STATUS SECTIONS
+// TOPBAR — NERV header bar (16px)
 // ============================================================
-.net-section, .status-section {
-  padding: 4px;
-  border-top: 1px solid $dim2;
-  margin-top: 2px;
+.topbar {
+  background-color: $bg;
+  padding: 0 8px;
+  min-height: 24px;
+  border-bottom-width: 1px;
+  border-bottom-color: $orange;
 }
 
-.section-title {
-  font-size: 6px;
+.tb-left {
+  padding-left: 4px;
+}
+
+.tb-center {
+  padding: 0 8px;
+}
+
+.tb-right {
+  padding-right: 4px;
+}
+
+.tb-text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.tb-or {
   color: $orange;
-  letter-spacing: 2px;
-  border-bottom: 1px solid $dim2;
-  padding-bottom: 2px;
-  margin-bottom: 3px;
+  font-weight: bold;
 }
 
-.net-label { font-size: 6px; color: $dim; width: 16px; }
-.net-val   { font-size: 6px; color: $teal; width: 36px; text-align: right; }
-.net-bar {
-  trough   { background: $bg; border: 1px solid $dim2; min-height: 4px; border-radius: 0; }
-  highlight, progress { background: $teal; border-radius: 0; }
+.tb-gr {
+  color: $green-dim;
 }
 
-.stat-item { flex: 1; }
-.stat-label { font-size: 5px; color: $dim; letter-spacing: 1px; }
-.stat-val   { font-size: 9px; font-weight: bold; }
+.tb-dim {
+  color: $dim;
+}
 
 // ============================================================
-// CONSENSUS DOT OVERRIDE PER UNIT
+// CLOCK STRIP
 // ============================================================
-.magi-unit-wrap:nth-child(1) { border-left: 2px solid $blue; }
-.magi-unit-wrap:nth-child(3) { border-left: 2px solid $orange; }
-.caspar-row .magi-unit-wrap  { border-left: 2px solid $teal; }
+.clock-strip {
+  padding: 3px 0;
+  border-top-width: 1px;
+  border-top-color: $border-dim;
+}
+
+.clock-date {
+  font-size: 9px;
+  color: $dim;
+}
+
+.clock-sep {
+  font-size: 9px;
+  color: $border-grn;
+}
+
+.clock-time {
+  font-size: 9px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.clock-loc {
+  font-size: 9px;
+  color: $dim;
+}

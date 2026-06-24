@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================================
 # EVA-SHELL — launch-eww.sh
-# Starts eww daemon and opens all 4 HUD panel windows
+# Starts eww daemon and opens all HUD panel windows
 # Called by i3 on startup (exec_always)
 # ============================================================
 
@@ -29,9 +29,10 @@ sleep 0.5
 "$EWW_BIN" daemon --config "$EWW_CONFIG" 2>/dev/null &
 sleep 1.5
 
-# Open HUD panels (left, right, bottom — magi-center is now a tiling terminal)
+# Open HUD panels: topbar first (reserves top 16px), then flanks + bottom
+"$EWW_BIN" open magi-topbar  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open left-panel   --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open right-panel  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open bottom-panel --config "$EWW_CONFIG" 2>&1
 
-echo "[EVA] eww HUD panels launched"
+echo "[EVA] eww HUD panels launched (topbar + left + right + bottom)"
