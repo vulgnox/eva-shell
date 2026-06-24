@@ -1,7 +1,7 @@
 # ============================================================
 # EVA-SHELL — i3 config
 # Layout: gaps-based HUD with clean center workspace
-# eww handles all HUD panels (left, right, center-top, bottom)
+# eww handles all HUD panels (topbar, left, right, bottom)
 # No floating terminals in HUD areas — zero overlap
 # ============================================================
 
@@ -30,23 +30,22 @@ default_orientation vertical
 # This ensures tiled windows NEVER overlap the HUD
 # ============================================================
 # Screen: 1920x1080
-# Polybar:       y=0..24         (24px, override-redirect)
-# Left eww:      x=0..280       (280px)
-# Right eww:     x=1640..1920   (280px)
-# Bottom eww:    y=990..1080    (90px, anchored bottom)
+# eww topbar:    y=0..16          (16px, dock/struts)
+# Left eww:      x=0..280         (280px)
+# Right eww:     x=1640..1920     (280px)
+# Bottom eww:    y=960..1080      (120px reserve via struts)
 #
 # i3 gaps push tiled windows INWARD from screen edges:
-#   top 24   → tiles start at y=24  (below polybar)
-#   bottom 120 → tiles end at y=960  (30px above bottom panel)
+#   top 16   → tiles start at y=16  (below eww topbar)
 #   left 280  → tiles start at x=280
 #   right 280 → tiles end at x=1640
 #
-# Tiling area: (280, 24) to (1640, 960) = 1360x936px
-# Gap between tiling and bottom panel: 30px (960 to 990)
+# Bottom is handled by eww :reserve struts (120px)
+# Tiling area: (280, 16) to (1640, 960) = 1360x944px
 
 gaps inner 0
 gaps outer 0
-gaps top 24
+gaps top 16
 gaps left 280
 gaps right 280
 
@@ -64,10 +63,7 @@ exec_always --no-startup-id picom --config ~/.config/eva-shell/config/picom/pico
 # Boot sequence (runs ONCE on first login, not on i3 reload)
 exec --no-startup-id ~/.config/eva-shell/scripts/boot-sequence.sh
 
-# Polybar
-exec_always --no-startup-id ~/.config/eva-shell/scripts/launch-polybar.sh
-
-# eww HUD panels (all 4 windows)
+# eww HUD panels (topbar + left + right + bottom)
 exec_always --no-startup-id ~/.config/eva-shell/scripts/launch-eww.sh
 
 # Set wallpaper (pure black)
@@ -76,37 +72,8 @@ exec_always --no-startup-id xsetroot -solid "#000000"
 # MAGI TUI — top tile in workspace 1 (system dashboard)
 exec --no-startup-id kitty --class eva-magi-tui --title "MAGI_SYSTEM" ~/.config/eva-shell/scripts/magi-tui.sh
 
-<<<<<<< HEAD
-# Left flank — process tree
-exec --no-startup-id kitty --class eva-left-procs \
-    --title "PROCESS_TREE" \
-    -e btop
-
-# Right flank — ASCII loop
-exec --no-startup-id kitty --class eva-right-ascii \
-    --title "ASCII_LOOP" \
-    -e ~/.config/eva-shell/scripts/ascii-loop.sh
-
-# Bottom flank — ranger
-exec --no-startup-id kitty --class eva-bottom-ranger \
-    --title "HOME_DIRECTORY" \
-    -e ranger
-
-# Bottom flank — keyboard sensor
-exec --no-startup-id kitty --class eva-bottom-kbd \
-    --title "KEYBOARD_SENSOR" \
-    -e ~/.config/eva-shell/scripts/kbd-sensor.sh
-
-# eww MAGI widget
-exec --no-startup-id ~/.config/eva-shell/scripts/launch-eww.sh
-
-# Central canvas — default terminal
-exec --no-startup-id kitty --class eva-center \
-    --title "CENTRAL_TERM"
-=======
 # Central canvas — working terminal (bottom tile in workspace 1)
 exec --no-startup-id bash -c 'sleep 1.5 && kitty --class eva-center --title "CENTRAL_TERM"'
->>>>>>> 1d6cbfc7201bf57776b934353a4c5e0667121e38
 
 # ============================================================
 # WINDOW RULES
@@ -123,6 +90,7 @@ for_window [class="eva-center"] floating disable
 for_window [class="eva-left.*"]     floating enable, border none
 for_window [class="eva-right.*"]    floating enable, border none
 for_window [class="eva-bottom.*"]   floating enable, border none
+for_window [class="eva-topbar.*"]   floating enable, border none
 for_window [class="eva-overlay.*"]  floating enable, border none
 
 # ============================================================

@@ -35,8 +35,8 @@ Exact reference: [`nerv_magi_v3_exact_colors.html`](https://github.com/vulgnox/e
 
 ## CURRENT STATUS (June 2026)
 
-**Phase:** 3/10 (Layout Skeleton + Theme Engine)  
-**Latest Commit:** `e8bf923` — SCSS rewrite for GTK3 compatibility
+**Phase:** 4/10 (Top Bar Implementation)  
+**Latest Commit:** Phase 4 — eww topbar with NERV header
 
 ### ✅ WORKING NOW
 
@@ -49,11 +49,11 @@ Exact reference: [`nerv_magi_v3_exact_colors.html`](https://github.com/vulgnox/e
 - Consensus status indicators
 - GTK3-compatible SCSS (all flat CSS, no nesting)
 - Color palette matches HTML reference exactly
+- **Top bar (eww)** — 16px NERV header with live timestamp, orange border, three sections
 
 ### 🔄 IN PROGRESS / BLOCKED
 
 - MAGI ring SVG (hexagon diagram centerpiece) — *needs eww SVG rendering*
-- Top bar implementation — *pending Phase 4*
 - Workspace indicator — *needs i3 event listener*
 - MELCHIOR LLM output — *system prompt needs tuning*
 - Full companion scripts (log-stream.sh, process-tree.sh, etc.)
@@ -182,13 +182,13 @@ journalctl -u eww --user -f    # eww errors
 - [x] Phase 1 — Base installation
 - [x] Phase 2 — Theme engine
 - [x] Phase 3 — Layout skeleton
-- [ ] Phase 4 — Boot sequence
+- [x] Phase 4 — Top bar (eww NERV header)
 - [ ] Phase 5 — Left flank (logs + process tree)
 - [ ] Phase 6 — Right flank (ASCII loop + MAGI)
-- [ ] Phase 7 — Bottom flank (ranger + widgets)
-- [ ] Phase 8 — Central canvas rules
-- [ ] Phase 9 — Polybar top bar
-- [ ] Phase 10 — Polish & integration
+- [ ] Phase 7 — MAGI ring SVG (hexagons + ring)
+- [ ] Phase 8 — Workspace indicator + MELCHIOR LLM
+- [ ] Phase 9 — Bottom panel (keyboard + status)
+- [ ] Phase 10 — Boot sequence + integration
 
 ---
 
