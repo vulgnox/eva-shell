@@ -30,7 +30,7 @@ default_orientation vertical
 # This ensures tiled windows NEVER overlap the HUD
 # ============================================================
 # Screen: 1920x1080
-# eww topbar:    y=0..16          (16px, dock/struts)
+# eww topbar:    y=0..24          (24px, dock/struts)
 # Left eww:      x=0..280         (280px)
 # Right eww:     x=1640..1920     (280px)
 # Bottom eww:    y=960..1080      (120px reserve via struts)
@@ -40,7 +40,7 @@ default_orientation vertical
 #   right 280 → tiles end at x=1640
 #
 # Top and bottom are handled by eww :reserve struts (dock windows).
-# Tiling area: (280, 16) to (1640, 960) = 1360x944px
+# Tiling area: (280, 24) to (1640, 960) = 1360x936px
 
 gaps inner 0
 gaps outer 0

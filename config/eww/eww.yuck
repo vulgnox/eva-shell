@@ -260,22 +260,22 @@ Win+f      fullscreen"))))
   :monitor 0
   :geometry (geometry
     :x "0px" :y "0px"
-    :width "1920px" :height "16px"
+    :width "1920px" :height "24px"
     :anchor "top left")
   :stacking "fg"
   :focusable false
   :windowtype "dock"
-  :reserve (struts :distance "16px" :side "top")
+  :reserve (struts :distance "24px" :side "top")
   :namespace "eva-topbar"
   (topbar-widget))
 
-; LEFT PANEL — below topbar (16px) to bottom panel edge
-; Height = 1080 - 16 (topbar) - 120 (bottom reserve) = 944px
+; LEFT PANEL — below topbar (24px) to bottom panel edge
+; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
 (defwindow left-panel
   :monitor 0
   :geometry (geometry
-    :x "0px" :y "16px"
-    :width "280px" :height "944px"
+    :x "0px" :y "24px"
+    :width "280px" :height "936px"
     :anchor "top left")
   :stacking "fg"
   :focusable false
@@ -283,12 +283,12 @@ Win+f      fullscreen"))))
   (left-panel-widget))
 
 ; RIGHT PANEL — anchored top-right, below topbar
-; Height = 1080 - 16 (topbar) - 120 (bottom reserve) = 944px
+; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
 (defwindow right-panel
   :monitor 0
   :geometry (geometry
-    :x "0px" :y "16px"
-    :width "280px" :height "944px"
+    :x "0px" :y "24px"
+    :width "280px" :height "936px"
     :anchor "top right")
   :stacking "fg"
   :focusable false
