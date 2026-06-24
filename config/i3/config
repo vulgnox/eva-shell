@@ -36,22 +36,20 @@ default_orientation vertical
 # Bottom eww:    y=960..1080      (120px reserve via struts)
 #
 # i3 gaps push tiled windows INWARD from screen edges:
-#   top 16   → tiles start at y=16  (below eww topbar)
 #   left 280  → tiles start at x=280
 #   right 280 → tiles end at x=1640
 #
-# Bottom is handled by eww :reserve struts (120px)
+# Top and bottom are handled by eww :reserve struts (dock windows).
 # Tiling area: (280, 16) to (1640, 960) = 1360x944px
 
 gaps inner 0
 gaps outer 0
-gaps top 16
 gaps left 280
 gaps right 280
 
-# NOTE: gaps bottom is NOT set here because the eww bottom-panel
-# uses :reserve (struts) + :windowtype "dock" which tells i3
-# to reserve that space automatically.
+# NOTE: gaps top/bottom are NOT set here because the eww topbar
+# and bottom-panel use :reserve (struts) + :windowtype "dock"
+# which tells i3 to reserve that space automatically.
 
 # ============================================================
 # STARTUP — autostart on session begin
