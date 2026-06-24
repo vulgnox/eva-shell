@@ -117,7 +117,7 @@ window {
 }
 
 // ============================================================
-// LEFT PANEL — LOGS + PROCESS
+// LEFT PANEL — LOGS + SYSLOAD + PROCESS + MEMORY
 // ============================================================
 .log-container {
   min-height: 180px;
@@ -128,9 +128,55 @@ window {
   color: $green-dim;
 }
 
+// SYSTEM_LOAD section
+.load-section {
+  padding: 4px 0;
+}
+
+.load-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 50px;
+}
+
+.load-val {
+  font-size: 11px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.load-val.green {
+  color: $green;
+}
+
 .proc-text {
   font-size: 11px;
   color: $teal;
+}
+
+// MEMORY_STATUS section
+.mem-section {
+  padding: 4px 0;
+}
+
+.mem-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 30px;
+}
+
+.mem-val {
+  font-size: 11px;
+  color: $blue;
+  font-weight: bold;
+}
+
+.ram-bar trough highlight {
+  background-color: $blue;
+}
+
+.swap-bar trough highlight {
+  background-color: $yellow;
 }
 
 // ============================================================
@@ -182,6 +228,53 @@ window {
   font-size: 9px;
   color: $dim;
   padding-top: 2px;
+}
+
+// DISK_STATUS section
+.disk-section {
+  padding-bottom: 4px;
+}
+
+.disk-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 20px;
+}
+
+.disk-val {
+  font-size: 11px;
+  color: $green;
+  font-weight: bold;
+}
+
+.disk-meta {
+  font-size: 9px;
+  color: $dim;
+}
+
+.root-bar trough highlight {
+  background-color: $green;
+}
+
+// A.T. FIELD section
+.atfield-section {
+  padding: 4px 0;
+}
+
+.at-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 90px;
+}
+
+.at-val {
+  font-size: 11px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.at-val.green {
+  color: $green;
 }
 
 // MAGI_DIAG section

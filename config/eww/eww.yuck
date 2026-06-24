@@ -15,6 +15,8 @@
 (defpoll ascii_art   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/ascii-poll.sh`)
 (defpoll log_lines   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/log-poll.sh`)
 (defpoll proc_data   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/proc-poll.sh`)
+(defpoll sysload     :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/sysload-poll.sh`)
+(defpoll disk_data   :interval "5s"  :initial "{}" `~/.config/eva-shell/scripts/disk-poll.sh`)
 (defpoll file_list   :interval "10s" :initial "" `~/.config/eva-shell/scripts/file-poll.sh`)
 (defpoll kbd_data    :interval "1s"  :initial "" `~/.config/eva-shell/scripts/kbd-poll.sh`)
 (defpoll clock_time  :interval "1s"  :initial "00:00:00" `date '+%H:%M:%S'`)
@@ -22,25 +24,53 @@
 (defpoll uptime_str  :interval "30s" :initial "--" `uptime -p | sed 's/up //'`)
 
 ; ============================================================
-; LEFT PANEL — SYS_LOG_STREAM + PROCESS_TREE
+; LEFT PANEL — SYS_LOG + SYSLOAD + PROCESS_TREE + MEMORY
+; Phase 5+6: Dense layout with no gaps
 ; ============================================================
 (defwidget left-panel-widget []
   (box :class "panel left-panel" :orientation "v" :spacing 0
-    ; SYS_LOG_STREAM
+    ; SYS_LOG_STREAM — top section
     (box :class "section" :orientation "v" :spacing 0 :vexpand true
       (label :class "section-label green" :halign "start" :text "SYS_LOG_STREAM")
       (box :class "log-container" :orientation "v" :vexpand true
         (label :class "log-text" :halign "start" :valign "start"
                :wrap true :text log_lines)))
+    ; SYSTEM_LOAD — load averages + task count
+    (box :class "section load-section" :orientation "v" :spacing 2
+      (label :class "section-label orange" :halign "start" :text "SYSTEM_LOAD")
+      (box :orientation "h" :spacing 8
+        (label :class "load-label" :text "LOAD:")
+        (label :class "load-val" :text {jq(sysload, ".load") ?: "--"}))
+      (box :orientation "h" :spacing 8
+        (label :class "load-label" :text "TASKS:")
+        (label :class "load-val" :text {jq(sysload, ".tasks") ?: "--"}))
+      (box :orientation "h" :spacing 8
+        (label :class "load-label" :text "UP:")
+        (label :class "load-val green" :text {jq(sysload, ".uptime") ?: "--"})))
     ; PROCESS_TREE
     (box :class "section" :orientation "v" :spacing 2
       (label :class "section-label cyan" :halign "start" :text "PROCESS_TREE")
       (label :class "proc-text" :halign "start" :valign "start"
-             :wrap true :text proc_data))))
+             :wrap true :text proc_data))
+    ; MEMORY_STATUS — RAM + SWAP bars
+    (box :class "section mem-section" :orientation "v" :spacing 2
+      (label :class "section-label blue" :halign "start" :text "MEMORY_STATUS")
+      (box :orientation "h" :spacing 4
+        (label :class "mem-label" :text "RAM")
+        (scale :class "mem-bar ram-bar"
+               :value {jq(sysload, ".mem_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "mem-val" :text "${jq(sysload, '.mem_pct') ?: 0}%"))
+      (box :orientation "h" :spacing 4
+        (label :class "mem-label" :text "SWP")
+        (scale :class "mem-bar swap-bar"
+               :value {jq(sysload, ".swap_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "mem-val" :text "${jq(sysload, '.swap_pct') ?: 0}%")))))
 
 ; ============================================================
-; RIGHT PANEL — 5 sections: ASCII + NET + MAGI_DIAG + CONTROLS + padding
-; Phase 6: Enhanced right flank with live data
+; RIGHT PANEL — 6 sections: ASCII + NET + DISK + MAGI_DIAG + AT_FIELD + CONTROLS
+; Phase 6: Dense layout with no gaps
 ; ============================================================
 (defwidget right-panel-widget []
   (box :class "panel right-panel" :orientation "v" :spacing 0
@@ -66,7 +96,20 @@
         (label :class "net-val teal" :text {jq(net_data, ".tx_str") ?: "--"}))
       (label :class "net-iface" :halign "start" :text {"IFACE: ${jq(net_data, '.iface') ?: 'N/A'}"}))
 
-    ; 3. MAGI_DIAG — CPU/RAM/Temp with colored bars (from magi-diag.sh)
+    ; 3. DISK_STATUS — filesystem usage
+    (box :class "section disk-section" :orientation "v" :spacing 2
+      (label :class "section-label green" :halign "start" :text "DISK_STATUS")
+      (box :orientation "h" :spacing 4
+        (label :class "disk-label" :text "/")
+        (scale :class "disk-bar root-bar"
+               :value {jq(disk_data, ".root_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "disk-val" :text "${jq(disk_data, '.root_pct') ?: 0}%"))
+      (box :orientation "h" :spacing 6
+        (label :class "disk-meta" :text {"USED: ${jq(disk_data, '.root_used') ?: '--'} / ${jq(disk_data, '.root_total') ?: '--'}"})
+        (label :class "disk-meta" :text {"DEV: ${jq(disk_data, '.device') ?: '--'}"})))
+
+    ; 4. MAGI_DIAG — CPU/RAM/Temp with colored bars
     (box :class "section diag-section" :orientation "v" :spacing 2
       (label :class "section-label orange" :halign "start" :text "MAGI_DIAG")
       ; MELCHIOR — CPU
@@ -94,7 +137,20 @@
                  :min 0 :max 100 :active false :hexpand true)
           (label :class "diag-val cas" :text "${jq(magi_diag, '.cas_temp') ?: 0}C"))))
 
-    ; 4. SYS_CONTROLS — Wi-Fi/Bluetooth/Audio/Battery status
+    ; 5. A.T. FIELD STATUS — MAGI consensus + core sync
+    (box :class "section atfield-section" :orientation "v" :spacing 2
+      (label :class "section-label green" :halign "start" :text "A.T._FIELD")
+      (box :orientation "h" :spacing 6
+        (label :class "at-label" :text "CONSENSUS:")
+        (label :class "at-val" :text {"${jq(magi_data, '.consensus') ?: 3}/3"}))
+      (box :orientation "h" :spacing 6
+        (label :class "at-label" :text "CORE_SYNC:")
+        (label :class "at-val green" :text {jq(magi_data, ".core_sync") ?: "99.6%"}))
+      (box :orientation "h" :spacing 6
+        (label :class "at-label" :text "INTEGRITY:")
+        (label :class "at-val green" :text "NOMINAL")))
+
+    ; 6. SYS_CONTROLS — Wi-Fi/Bluetooth/Audio/Battery status
     (box :class "section ctrl-section" :orientation "v" :spacing 2 :vexpand true
       (label :class "section-label orange" :halign "start" :text "SYS_CONTROLS")
       (box :class "ctrl-row" :orientation "h" :spacing 4
@@ -198,26 +254,25 @@ Win+f      fullscreen"))))
   :namespace "eva-topbar"
   (topbar-widget))
 
-; LEFT PANEL — below topbar (24px) to bottom panel edge
-; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
+; LEFT PANEL — below topbar, stops above bottom panel
+; Height = 1080 - 24 (topbar) - 120 (bottom) - 6 (gap) = 930px
 (defwindow left-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "24px"
-    :width "280px" :height "936px"
+    :width "280px" :height "860px"
     :anchor "top left")
   :stacking "fg"
   :focusable false
   :namespace "eva-left-panel"
   (left-panel-widget))
 
-; RIGHT PANEL — anchored top-right, below topbar
-; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
+; RIGHT PANEL — anchored top-right, stops above bottom panel
 (defwindow right-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "24px"
-    :width "280px" :height "936px"
+    :width "280px" :height "860px"
     :anchor "top right")
   :stacking "fg"
   :focusable false
