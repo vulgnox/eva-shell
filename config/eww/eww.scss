@@ -121,13 +121,13 @@ window {
 // Phase 5: Dual-scroll layout with section headers
 // ============================================================
 
-// Log section — takes 60% of left panel height
+// Log section — flexible height (vexpand fills remaining space)
 .log-section {
-  min-height: 520px;
+  min-height: 280px;
 }
 
 .log-scroll {
-  min-height: 480px;
+  min-height: 240px;
 }
 
 .log-container {
@@ -139,13 +139,59 @@ window {
   color: $green-dim;
 }
 
-// Process section — takes 40% of left panel height
+// SYSTEM_LOAD section
+.load-section {
+  padding: 4px 0;
+}
+
+.load-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 50px;
+}
+
+.load-val {
+  font-size: 11px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.load-val.green {
+  color: $green;
+}
+
+// Process section
 .proc-section {
-  min-height: 340px;
+  min-height: 200px;
+}
+
+// MEMORY_STATUS section
+.mem-section {
+  padding: 4px 0;
+}
+
+.mem-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 30px;
+}
+
+.mem-val {
+  font-size: 11px;
+  color: $blue;
+  font-weight: bold;
+}
+
+.ram-bar trough highlight {
+  background-color: $blue;
+}
+
+.swap-bar trough highlight {
+  background-color: $yellow;
 }
 
 .proc-scroll {
-  min-height: 300px;
+  min-height: 160px;
 }
 
 .proc-container {

@@ -13,6 +13,7 @@
 (defpoll net_data    :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/net-stats.sh`)
 (defpoll log_lines   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/log-poll.sh`)
 (defpoll proc_data   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/process-tree.sh`)
+(defpoll sysload     :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/sysload-poll.sh`)
 (defpoll file_list   :interval "10s" :initial "" `~/.config/eva-shell/scripts/file-poll.sh`)
 (defpoll kbd_data    :interval "1s"  :initial "" `~/.config/eva-shell/scripts/kbd-poll.sh`)
 (defpoll clock_time  :interval "1s"  :initial "00:00:00" `date '+%H:%M:%S'`)
@@ -20,25 +21,52 @@
 (defpoll uptime_str  :interval "30s" :initial "--" `uptime -p | sed 's/up //'`)
 
 ; ============================================================
-; LEFT PANEL — SYS_LOG_STREAM (60%) + PROCESS_TREE (40%)
-; Dual-scroll layout with section headers
+; LEFT PANEL — SYS_LOG + SYSLOAD + PROCESS_TREE + MEMORY
+; Dense layout with dual-scroll and no gaps
 ; ============================================================
 (defwidget left-panel-widget []
   (box :class "panel left-panel" :orientation "v" :spacing 0
-    ; SYS_LOG_STREAM — top 60%
+    ; SYS_LOG_STREAM — scrollable logs (vexpand fills available space)
     (box :class "section log-section" :orientation "v" :spacing 0 :vexpand true
       (label :class "section-label green" :halign "start" :text "SYS_LOG_STREAM")
       (scroll :class "log-scroll" :vexpand true :vscroll true :hscroll false
         (box :class "log-container" :orientation "v"
           (label :class "log-text" :halign "start" :valign "start"
                  :wrap true :text log_lines))))
-    ; PROCESS_TREE — bottom 40%
+    ; SYSTEM_LOAD — load averages + task count
+    (box :class "section load-section" :orientation "v" :spacing 2
+      (label :class "section-label orange" :halign "start" :text "SYSTEM_LOAD")
+      (box :orientation "h" :spacing 8
+        (label :class "load-label" :text "LOAD:")
+        (label :class "load-val" :text {jq(sysload, ".load") ?: "--"}))
+      (box :orientation "h" :spacing 8
+        (label :class "load-label" :text "TASKS:")
+        (label :class "load-val" :text {jq(sysload, ".tasks") ?: "--"}))
+      (box :orientation "h" :spacing 8
+        (label :class "load-label" :text "UP:")
+        (label :class "load-val green" :text {jq(sysload, ".uptime") ?: "--"})))
+    ; PROCESS_TREE — scrollable process list
     (box :class "section proc-section" :orientation "v" :spacing 0
-      (label :class "section-label orange" :halign "start" :text "PROCESS_TREE")
+      (label :class "section-label cyan" :halign "start" :text "PROCESS_TREE")
       (scroll :class "proc-scroll" :vscroll true :hscroll false
         (box :class "proc-container" :orientation "v"
           (label :class "proc-text" :halign "start" :valign "start"
-                 :wrap true :text proc_data))))))
+                 :wrap true :text proc_data))))
+    ; MEMORY_STATUS — RAM + SWAP bars
+    (box :class "section mem-section" :orientation "v" :spacing 2
+      (label :class "section-label blue" :halign "start" :text "MEMORY_STATUS")
+      (box :orientation "h" :spacing 4
+        (label :class "mem-label" :text "RAM")
+        (scale :class "mem-bar ram-bar"
+               :value {jq(sysload, ".mem_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "mem-val" :text "${jq(sysload, '.mem_pct') ?: 0}%"))
+      (box :orientation "h" :spacing 4
+        (label :class "mem-label" :text "SWP")
+        (scale :class "mem-bar swap-bar"
+               :value {jq(sysload, ".swap_pct") ?: 0}
+               :min 0 :max 100 :active false :hexpand true)
+        (label :class "mem-val" :text "${jq(sysload, '.swap_pct') ?: 0}%")))))
 
 ; ============================================================
 ; RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS
@@ -202,26 +230,25 @@ Win+f      fullscreen"))))
   :namespace "eva-topbar"
   (topbar-widget))
 
-; LEFT PANEL — below topbar (24px) to bottom panel edge
-; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
+; LEFT PANEL — below topbar, stops above bottom panel
+; Height reduced to avoid overlap with bottom panel
 (defwindow left-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "24px"
-    :width "280px" :height "936px"
+    :width "280px" :height "860px"
     :anchor "top left")
   :stacking "fg"
   :focusable false
   :namespace "eva-left-panel"
   (left-panel-widget))
 
-; RIGHT PANEL — anchored top-right, below topbar
-; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px
+; RIGHT PANEL — anchored top-right, stops above bottom panel
 (defwindow right-panel
   :monitor 0
   :geometry (geometry
     :x "0px" :y "24px"
-    :width "280px" :height "936px"
+    :width "280px" :height "860px"
     :anchor "top right")
   :stacking "fg"
   :focusable false
