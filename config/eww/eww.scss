@@ -354,59 +354,6 @@ scale slider {
 }
 
 // ============================================================
-// MAGI CENTER — Ring SVG + Workspace + LLM
-// ============================================================
-.center-panel {
-  background-color: $bg;
-  padding: 20px 16px;
-}
-
-.magi-ring-wrap {
-  padding: 4px 0 12px;
-}
-
-.center-grid {
-  padding: 0;
-  min-width: 600px;
-}
-
-.ws-panel {
-  min-width: 260px;
-  padding: 6px 8px;
-  border-width: 1px;
-  border-color: $border-grn;
-}
-
-.ws-text {
-  font-size: 9px;
-  color: $green;
-}
-
-.llm-panel {
-  min-width: 320px;
-  padding: 6px 8px;
-  border-width: 1px;
-  border-color: $blue;
-}
-
-.llm-box {
-  background-color: $bg;
-  padding: 4px;
-}
-
-.llm-timestamp {
-  font-size: 7px;
-  color: $dim;
-  letter-spacing: 1px;
-  margin-bottom: 2px;
-}
-
-.llm-text {
-  font-size: 9px;
-  color: $teal;
-}
-
-// ============================================================
 // TOPBAR — NERV header bar (16px)
 // ============================================================
 .topbar {

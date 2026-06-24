@@ -2,7 +2,7 @@
 # ============================================================
 # EVA-SHELL — magi-ring.sh
 # MAGI Ring SVG — hexagonal visualization with live system data
-# Generates SVG to cache, outputs file path for eww defpoll
+# Generates SVG to cache, outputs file path (used by magi-tui.sh)
 # ============================================================
 
 CACHE_DIR="$HOME/.cache/eva-shell"

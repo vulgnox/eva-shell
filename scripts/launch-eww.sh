@@ -21,10 +21,6 @@ if [ ! -x "$EWW_BIN" ]; then
     exit 1
 fi
 
-# Pre-generate MAGI Ring SVG so eww image widget has a file on startup
-mkdir -p "$HOME/.cache/eva-shell"
-"$HOME/.config/eva-shell/scripts/magi-ring.sh" > /dev/null 2>&1
-
 # Kill existing eww instance
 "$EWW_BIN" kill 2>/dev/null || true
 sleep 0.5
@@ -33,11 +29,10 @@ sleep 0.5
 "$EWW_BIN" daemon --config "$EWW_CONFIG" 2>/dev/null &
 sleep 1.5
 
-# Open HUD panels: topbar first (reserves top 24px), then flanks + center + bottom
+# Open HUD panels: topbar first (reserves top 24px), then flanks + bottom
 "$EWW_BIN" open magi-topbar  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open left-panel   --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open right-panel  --config "$EWW_CONFIG" 2>&1
-"$EWW_BIN" open magi-center  --config "$EWW_CONFIG" 2>&1
 "$EWW_BIN" open bottom-panel --config "$EWW_CONFIG" 2>&1
 
-echo "[EVA] eww HUD panels launched (topbar + left + right + center + bottom)"
+echo "[EVA] eww HUD panels launched (topbar + left + right + bottom)"
