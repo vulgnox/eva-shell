@@ -18,6 +18,8 @@
 (defpoll clock_time  :interval "1s"  :initial "00:00:00" `date '+%H:%M:%S'`)
 (defpoll clock_date  :interval "60s" :initial "0000.00.00" `date '+%Y.%m.%d'`)
 (defpoll uptime_str  :interval "30s" :initial "--" `uptime -p | sed 's/up //'`)
+(defpoll magi_svg    :interval "2s"  :initial "" `~/.config/eva-shell/scripts/magi-ring.sh`)
+(defpoll ws_info     :interval "1s"  :initial "WS:1 ACTIVE" `~/.config/eva-shell/scripts/ws-monitor.sh`)
 
 ; ============================================================
 ; LEFT PANEL — SYS_LOG_STREAM + PROCESS_TREE
@@ -37,75 +39,30 @@
              :wrap true :text proc_data))))
 
 ; ============================================================
-; MAGI CENTER — Header + MAGI Units + Clock
+; MAGI CENTER — Ring SVG + Workspace + LLM Analysis
 ; ============================================================
 (defwidget magi-center-widget []
-  (box :class "panel magi-center-panel" :orientation "v" :spacing 0
-    ; MAGI HEADER
-    (box :class "magi-header" :orientation "h" :spacing 0
-      (box :class "corner-box" :orientation "v" :halign "start"
-        (label :class "corner-label" :text "DANANG TYPE-B")
-        (label :class "corner-val" :text "PROTECT")
-        (label :class "corner-sub yellow" :text "NO. 666"))
-      (box :class "magi-title" :orientation "v" :halign "center" :hexpand true
-        (label :class "magi-main-title" :text "MAGI -- 01")
-        (label :class "magi-sub-title" :text "on MAGI-01 ORIGINAL")
-        (box :class "consensus-bar" :orientation "h" :halign "center" :spacing 6
-          (box :class "cdot mel-dot")
-          (label :class "consensus-label" :text "MEL")
-          (box :class "cdot bal-dot")
-          (label :class "consensus-label" :text "BAL")
-          (box :class "cdot cas-dot")
-          (label :class "consensus-label" :text "CAS")
-          (label :class "consensus-ok" :text "3/3 CONSENSUS")))
-      (box :class "corner-box" :orientation "v" :halign "end"
-        (label :class "corner-label" :text "TIME TO COLLAPSE")
-        (label :class "corner-val" :text uptime_str)
-        (label :class "corner-sub" :text "sec.")))
-
-    ; MAGI UNITS ROW
-    (box :class "magi-units" :orientation "h" :halign "center" :spacing 12
-      ; MELCHIOR
-      (box :class "magi-unit mel-unit" :orientation "v" :spacing 1
-        (label :class "unit-name mel" :text "MELCHIOR")
-        (label :class "unit-sub" :text "CEREBRUM // LLM")
-        (scale :class "unit-bar mel-bar"
-               :value {jq(magi_data, ".melchior.value") ?: 0}
-               :min 0 :max 100 :active false)
-        (label :class "unit-val mel" :halign "end"
-               :text "${jq(magi_data, '.melchior.value') ?: 0}%"))
-      ; MAGI DIAMOND
-      (box :class "magi-diamond" :orientation "v" :halign "center" :valign "center"
-        (label :class "diamond-text" :text "MAGI")
-        (label :class "diamond-sub" :text "01"))
-      ; BALTHASAR
-      (box :class "magi-unit bal-unit" :orientation "v" :spacing 1
-        (label :class "unit-name bal" :text "BALTHASAR")
-        (label :class "unit-sub" :text "CALLOSUM // MEM")
-        (scale :class "unit-bar bal-bar"
-               :value {jq(magi_data, ".balthasar.value") ?: 0}
-               :min 0 :max 100 :active false)
-        (label :class "unit-val bal" :halign "end"
-               :text "${jq(magi_data, '.balthasar.value') ?: 0}%")))
-
-    ; CASPAR
-    (box :class "caspar-row" :orientation "h" :halign "center"
-      (box :class "magi-unit cas-unit" :orientation "v" :spacing 1
-        (label :class "unit-name cas" :text "CASPAR")
-        (label :class "unit-sub" :text "MEDULLA // ENV")
-        (scale :class "unit-bar cas-bar"
-               :value {jq(magi_data, ".caspar.value") ?: 0}
-               :min 0 :max 100 :active false)
-        (label :class "unit-val cas" :halign "end"
-               :text "${jq(magi_data, '.caspar.value') ?: 0}C")))
-
-    ; CLOCK STRIP
-    (box :class "clock-strip" :orientation "h" :halign "center" :spacing 8
-      (label :class "clock-date" :text clock_date)
-      (label :class "clock-sep" :text "//")
-      (label :class "clock-time" :text clock_time)
-      (label :class "clock-sep" :text "//")
-      (label :class "clock-loc" :text "TOKYO-3 // GEO-FRONT"))))
+  (box :class "center-panel" :orientation "v" :spacing 8
+       :valign "start" :halign "center"
+    ; MAGI Ring SVG visualization
+    (box :class "magi-ring-wrap" :halign "center"
+         :visible {magi_svg != ""}
+      (image :path magi_svg :image-width 600 :image-height 300))
+    ; Bottom grid: workspace info + MELCHIOR LLM
+    (box :class "center-grid" :orientation "h" :spacing 8 :halign "center"
+      ; Workspace panel
+      (box :class "ws-panel" :orientation "v" :spacing 2
+        (label :class "section-label green" :halign "start" :text "WORKSPACE")
+        (label :class "ws-text" :halign "start" :valign "start"
+               :wrap true :text ws_info))
+      ; MELCHIOR LLM output
+      (box :class "llm-panel" :orientation "v" :spacing 2
+        (label :class "section-label blue" :halign "start" :text "MELCHIOR // LLM ANALYSIS")
+        (label :class "llm-timestamp" :halign "start"
+               :text "${clock_time} -- MELCHIOR OUTPUT")
+        (box :class "llm-box"
+          (label :class "llm-text" :halign "start" :valign "start"
+                 :wrap true :text mel_llm))))))
 
 ; ============================================================
 ; RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS
@@ -268,6 +225,19 @@ Win+f      fullscreen"))))
   :reserve (struts :distance "24px" :side "top")
   :namespace "eva-topbar"
   (topbar-widget))
+
+; MAGI CENTER — ring SVG + workspace + LLM (bg stacking = behind tiled windows)
+; Covers center tiling area: (280, 24) to (1640, 960) = 1360x936px
+(defwindow magi-center
+  :monitor 0
+  :geometry (geometry
+    :x "280px" :y "24px"
+    :width "1360px" :height "936px"
+    :anchor "top left")
+  :stacking "bg"
+  :focusable false
+  :namespace "eva-magi-center"
+  (magi-center-widget))
 
 ; LEFT PANEL — below topbar (24px) to bottom panel edge
 ; Height = 1080 - 24 (topbar) - 120 (bottom reserve) = 936px

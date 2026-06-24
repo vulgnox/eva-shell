@@ -354,123 +354,56 @@ scale slider {
 }
 
 // ============================================================
-// MAGI CENTER (used by TUI — kept for reference)
+// MAGI CENTER — Ring SVG + Workspace + LLM
 // ============================================================
-.magi-center-panel {
-  border-bottom-width: 1px;
-  border-bottom-color: $orange;
-  padding: 4px 6px 0;
+.center-panel {
+  background-color: $bg;
+  padding: 20px 16px;
 }
 
-.corner-box {
+.magi-ring-wrap {
+  padding: 4px 0 12px;
+}
+
+.center-grid {
+  padding: 0;
+  min-width: 600px;
+}
+
+.ws-panel {
+  min-width: 260px;
+  padding: 6px 8px;
   border-width: 1px;
-  border-color: $orange;
-  padding: 3px 6px;
+  border-color: $border-grn;
 }
 
-.corner-label {
-  font-size: 8px;
-  letter-spacing: 1px;
-  color: $orange;
-}
-
-.corner-val {
-  font-size: 13px;
-  font-weight: bold;
-  color: $orange;
-}
-
-.magi-main-title {
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: $orange;
-  font-weight: bold;
-}
-
-.magi-sub-title {
-  font-size: 8px;
-  color: $green-dim;
-}
-
-.cdot {
-  min-width: 8px;
-  min-height: 8px;
-  border-radius: 50%;
-  background-color: $green;
-}
-
-.consensus-label {
-  font-size: 8px;
-  color: $green-dim;
-}
-
-.consensus-ok {
-  font-size: 8px;
+.ws-text {
+  font-size: 9px;
   color: $green;
 }
 
-.unit-name.mel {
-  font-size: 10px;
-  font-weight: bold;
-  color: $blue;
+.llm-panel {
+  min-width: 320px;
+  padding: 6px 8px;
+  border-width: 1px;
+  border-color: $blue;
 }
 
-.unit-name.bal {
-  font-size: 10px;
-  font-weight: bold;
-  color: $orange;
+.llm-box {
+  background-color: $bg;
+  padding: 4px;
 }
 
-.unit-name.cas {
-  font-size: 10px;
-  font-weight: bold;
-  color: $teal;
-}
-
-.unit-sub {
-  font-size: 8px;
-  color: $dim;
-}
-
-.unit-val.mel {
-  font-size: 9px;
-  color: $blue;
-}
-
-.unit-val.bal {
-  font-size: 9px;
-  color: $orange;
-}
-
-.unit-val.cas {
-  font-size: 9px;
-  color: $teal;
-}
-
-.magi-diamond {
-  border-width: 2px;
-  border-color: $orange;
-  padding: 8px 12px;
-  background-color: #050500;
-}
-
-.diamond-text {
-  font-size: 14px;
-  font-weight: bold;
-  color: $orange;
-}
-
-.diamond-sub {
-  font-size: 11px;
-  color: $orange;
-}
-
-.llm-box { background-color: $bg; padding: 4px; }
-.llm-timestamp { font-size: 5px; color: $dim; letter-spacing: 1px; margin-bottom: 2px; }
-.llm-text {
+.llm-timestamp {
   font-size: 7px;
+  color: $dim;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.llm-text {
+  font-size: 9px;
   color: $teal;
-  // line-height not supported in GTK3 CSS
 }
 
 // ============================================================

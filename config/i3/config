@@ -89,6 +89,7 @@ for_window [class="eva-left.*"]     floating enable, border none
 for_window [class="eva-right.*"]    floating enable, border none
 for_window [class="eva-bottom.*"]   floating enable, border none
 for_window [class="eva-topbar.*"]   floating enable, border none
+for_window [class="eva-magi-center"] floating enable, border none
 for_window [class="eva-overlay.*"]  floating enable, border none
 
 # ============================================================
