@@ -48,7 +48,7 @@ journalctl -f -n 20 --no-pager --output=cat 2>/dev/null \
             echo -e "${C_BLUE}[KRN]${C_RESET} ${C_DIM}${msg}${C_RESET}" ;;
         *[Nn]etwork*|*wlo*|*eth*|*NET*|*[Dd]hcp*|*[Ww]ifi*|*[Ww]lan*|*[Dd]ns*)
             echo -e "${C_TEAL}[NET]${C_RESET} ${C_DIM}${msg}${C_RESET}" ;;
-        *[Tt]herm*|*[Tt]emp*|*[Hh]eat*|*[Cc]ooling*)
+        *[Tt]hermal*|*[Tt]emperature*|*[Hh]eating*|*[Oo]verheat*|*[Cc]ooling*)
             echo -e "${C_YELLOW}[TMP]${C_RESET} ${C_YELLOW}${msg}${C_RESET}" ;;
         *[Ss]tarted*|*[Aa]ctivat*|*[Oo]nline*|*[Rr]eady*|*[Ss]uccess*|*[Bb]oot*)
             echo -e "${C_GREEN}[OK ]${C_RESET} ${C_GREEN_DIM}${msg}${C_RESET}" ;;

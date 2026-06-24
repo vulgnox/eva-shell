@@ -8,26 +8,9 @@
 
 # Get recent journal lines (20-line rolling buffer)
 # Format: [TAG] message (fixed-width 5-char labels)
-journalctl --no-pager -n 20 --output=cat 2>/dev/null | while IFS= read -r line; do
-    # Truncate to fit 280px panel (~38 chars at 9px font)
-    msg="${line:0:34}"
-    case "$line" in
-        *[Ee]rror*|*ERROR*|*[Ff]ail*|*FAIL*|*[Cc]ritical*|*CRIT*)
-            echo "[ERR] $msg" ;;
-        *[Ww]arn*|*WARN*|*WARNING*)
-            echo "[WRN] $msg" ;;
-        *[Kk]ernel*|*KRN*|*i915*|*drm*|*usb*)
-            echo "[KRN] $msg" ;;
-        *[Nn]etwork*|*wlo*|*eth*|*NET*|*[Dd]hcp*|*[Ww]ifi*|*[Ww]lan*)
-            echo "[NET] $msg" ;;
-        *[Ss]tarted*|*[Aa]ctivat*|*[Oo]nline*|*[Rr]eady*|*[Ss]uccess*)
-            echo "[OK ] $msg" ;;
-        *[Tt]herm*|*[Tt]emp*|*[Hh]eat*)
-            echo "[WRN] $msg" ;;
-        *)
-            echo "[LOG] $msg" ;;
-    esac
-done 2>/dev/null || cat << 'FALLBACK'
+OUTPUT=$(journalctl --no-pager -n 20 --output=cat 2>/dev/null)
+if [ -z "$OUTPUT" ]; then
+    cat << 'FALLBACK'
 [OK ] MAGI 3/3 CONSENSUS ACTIVE
 [NET] wlo1 DHCP lease acquired
 [OK ] picom compositor ACTIVE
@@ -49,3 +32,26 @@ done 2>/dev/null || cat << 'FALLBACK'
 [OK ] NERV-HQ link ESTABLISHED
 [LOG] magi-ring.sh cycle 847
 FALLBACK
+    exit 0
+fi
+
+echo "$OUTPUT" | while IFS= read -r line; do
+    # Truncate to fit 280px panel (~38 chars at 9px font)
+    msg="${line:0:34}"
+    case "$line" in
+        *[Ee]rror*|*ERROR*|*[Ff]ail*|*FAIL*|*[Cc]ritical*|*CRIT*)
+            echo "[ERR] $msg" ;;
+        *[Ww]arn*|*WARN*|*WARNING*)
+            echo "[WRN] $msg" ;;
+        *[Kk]ernel*|*KRN*|*i915*|*drm*|*[Uu]sb*)
+            echo "[KRN] $msg" ;;
+        *[Nn]etwork*|*wlo*|*eth*|*NET*|*[Dd]hcp*|*[Ww]ifi*|*[Ww]lan*)
+            echo "[NET] $msg" ;;
+        *[Ss]tarted*|*[Aa]ctivat*|*[Oo]nline*|*[Rr]eady*|*[Ss]uccess*)
+            echo "[OK ] $msg" ;;
+        *[Tt]hermal*|*[Tt]emperature*|*[Hh]eating*|*[Oo]verheat*)
+            echo "[WRN] $msg" ;;
+        *)
+            echo "[LOG] $msg" ;;
+    esac
+done

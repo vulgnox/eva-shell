@@ -8,7 +8,7 @@
 
 # Get top 8 processes by CPU usage
 # Format: rank padded name cpu% mem% visual bar
-ps aux --sort=-%cpu 2>/dev/null | awk 'NR>1 && NR<=9 {
+OUTPUT=$(ps aux --sort=-%cpu 2>/dev/null | awk 'NR>1 && NR<=9 {
     cmd = $11
     gsub(/.*\//, "", cmd)
     gsub(/[\[\]]/, "", cmd)
@@ -20,10 +20,13 @@ ps aux --sort=-%cpu 2>/dev/null | awk 'NR>1 && NR<=9 {
     if (bar_len < 1 && cpu > 0) bar_len = 1
     if (bar_len > 10) bar_len = 10
     bar = ""
-    for (i = 1; i <= bar_len; i++) bar = bar "█"
-    for (i = bar_len + 1; i <= 10; i++) bar = bar "░"
+    for (i = 1; i <= bar_len; i++) bar = bar "\342\226\210"
+    for (i = bar_len + 1; i <= 10; i++) bar = bar "\342\226\221"
     printf "%d %-8s %5.1f%% %4.1f%% %s\n", NR-1, cmd, cpu, mem, bar
-}' 2>/dev/null || cat << 'FALLBACK'
+}')
+
+if [ -z "$OUTPUT" ]; then
+    cat << 'FALLBACK'
 1 ollama    3.5%  4.2% ███░░░░░░░
 2 kitty     2.2%  1.8% ██░░░░░░░░
 3 eww       1.4%  2.1% █░░░░░░░░░
@@ -33,3 +36,6 @@ ps aux --sort=-%cpu 2>/dev/null | awk 'NR>1 && NR<=9 {
 7 pulseaud  0.4%  0.3% █░░░░░░░░░
 8 systemd   0.2%  0.4% █░░░░░░░░░
 FALLBACK
+else
+    echo "$OUTPUT"
+fi
