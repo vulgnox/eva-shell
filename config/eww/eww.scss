@@ -25,7 +25,7 @@ $dead:       #1a2a10;
 // ============================================================
 * {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   color: $dim;
   background-color: $bg;
   background-image: none;
@@ -87,7 +87,7 @@ window {
 }
 
 .section-label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 2px;
   padding-bottom: 2px;
   margin-bottom: 3px;
@@ -124,12 +124,12 @@ window {
 }
 
 .log-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $green-dim;
 }
 
 .proc-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
 }
 
@@ -144,7 +144,7 @@ window {
 }
 
 .ascii-art {
-  font-size: 9px;
+  font-size: 11px;
   color: $orange;
   padding: 4px 2px;
   margin-bottom: 3px;
@@ -160,13 +160,13 @@ window {
 }
 
 .net-label {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
   min-width: 22px;
 }
 
 .net-val {
-  font-size: 9px;
+  font-size: 11px;
   min-width: 40px;
 }
 
@@ -179,7 +179,7 @@ window {
 }
 
 .net-iface {
-  font-size: 7px;
+  font-size: 9px;
   color: $dim;
   padding-top: 2px;
 }
@@ -210,7 +210,7 @@ window {
 }
 
 .diag-label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
 }
 
@@ -227,7 +227,7 @@ window {
 }
 
 .diag-val {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: bold;
 }
 
@@ -312,22 +312,22 @@ scale slider {
 }
 
 .ctrl-label {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .ctrl-val.on {
-  font-size: 9px;
+  font-size: 11px;
   color: $green;
 }
 
 .ctrl-val.off {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .ctrl-val.warn {
-  font-size: 9px;
+  font-size: 11px;
   color: $yellow;
 }
 
@@ -342,29 +342,29 @@ scale slider {
 }
 
 .file-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
 }
 
 .kbd-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $green;
 }
 
 .kbd-meta {
-  font-size: 8px;
+  font-size: 10px;
   color: $dim;
 }
 
 // Status values
 .stat-label {
-  font-size: 7px;
+  font-size: 9px;
   letter-spacing: 1px;
   color: $dim;
 }
 
 .stat-val {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -382,7 +382,7 @@ scale slider {
 
 // Hotkeys
 .hotkey-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
@@ -411,7 +411,7 @@ scale slider {
 
 .tb-text {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
 }
 
@@ -438,22 +438,22 @@ scale slider {
 }
 
 .clock-date {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .clock-sep {
-  font-size: 9px;
+  font-size: 11px;
   color: $border-grn;
 }
 
 .clock-time {
-  font-size: 9px;
+  font-size: 11px;
   color: $orange;
   font-weight: bold;
 }
 
 .clock-loc {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
