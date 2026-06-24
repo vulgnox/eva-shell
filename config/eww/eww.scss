@@ -25,7 +25,7 @@ $dead:       #1a2a10;
 // ============================================================
 * {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   color: $dim;
   background-color: $bg;
   background-image: none;
@@ -87,7 +87,7 @@ window {
 }
 
 .section-label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 2px;
   padding-bottom: 2px;
   margin-bottom: 3px;
@@ -117,47 +117,169 @@ window {
 }
 
 // ============================================================
-// LEFT PANEL — LOGS + PROCESS
+// LEFT PANEL — LOGS + SYSLOAD + PROCESS + MEMORY
 // ============================================================
 .log-container {
   min-height: 180px;
 }
 
 .log-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $green-dim;
 }
 
+// SYSTEM_LOAD section
+.load-section {
+  padding: 4px 0;
+}
+
+.load-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 50px;
+}
+
+.load-val {
+  font-size: 11px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.load-val.green {
+  color: $green;
+}
+
 .proc-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
 }
 
+// MEMORY_STATUS section
+.mem-section {
+  padding: 4px 0;
+}
+
+.mem-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 30px;
+}
+
+.mem-val {
+  font-size: 11px;
+  color: $blue;
+  font-weight: bold;
+}
+
+.ram-bar trough highlight {
+  background-color: $blue;
+}
+
+.swap-bar trough highlight {
+  background-color: $yellow;
+}
+
 // ============================================================
-// RIGHT PANEL
+// RIGHT PANEL — Phase 6: 5 sections
 // ============================================================
+
+// ASCII_RENDER section
+.ascii-section {
+  min-height: 120px;
+  padding-bottom: 4px;
+}
+
 .ascii-art {
-  font-size: 9px;
+  font-size: 11px;
   color: $orange;
   padding: 4px 2px;
   margin-bottom: 3px;
 }
 
-// Net bars
+// NET_INTERCEPT section
+.net-section {
+  padding-bottom: 4px;
+}
+
+.net-row {
+  padding: 1px 0;
+}
+
 .net-label {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
   min-width: 22px;
 }
 
+.net-val {
+  font-size: 11px;
+  min-width: 40px;
+}
+
 .net-val.cyan {
-  font-size: 9px;
   color: $teal;
 }
 
 .net-val.teal {
-  font-size: 9px;
   color: $teal-hi;
+}
+
+.net-iface {
+  font-size: 9px;
+  color: $dim;
+  padding-top: 2px;
+}
+
+// DISK_STATUS section
+.disk-section {
+  padding-bottom: 4px;
+}
+
+.disk-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 20px;
+}
+
+.disk-val {
+  font-size: 11px;
+  color: $green;
+  font-weight: bold;
+}
+
+.disk-meta {
+  font-size: 9px;
+  color: $dim;
+}
+
+.root-bar trough highlight {
+  background-color: $green;
+}
+
+// A.T. FIELD section
+.atfield-section {
+  padding: 4px 0;
+}
+
+.at-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 90px;
+}
+
+.at-val {
+  font-size: 11px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.at-val.green {
+  color: $green;
+}
+
+// MAGI_DIAG section
+.diag-section {
+  padding-bottom: 4px;
 }
 
 // MAGI DIAG
@@ -181,7 +303,7 @@ window {
 }
 
 .diag-label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
 }
 
@@ -198,7 +320,7 @@ window {
 }
 
 .diag-val {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: bold;
 }
 
@@ -255,7 +377,11 @@ scale slider {
   background-color: $teal-hi;
 }
 
-// Controls
+// SYS_CONTROLS section
+.ctrl-section {
+  padding-top: 4px;
+}
+
 .ctrl-row {
   padding: 2px 0;
 }
@@ -279,22 +405,22 @@ scale slider {
 }
 
 .ctrl-label {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .ctrl-val.on {
-  font-size: 9px;
+  font-size: 11px;
   color: $green;
 }
 
 .ctrl-val.off {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .ctrl-val.warn {
-  font-size: 9px;
+  font-size: 11px;
   color: $yellow;
 }
 
@@ -309,29 +435,29 @@ scale slider {
 }
 
 .file-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
 }
 
 .kbd-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $green;
 }
 
 .kbd-meta {
-  font-size: 8px;
+  font-size: 10px;
   color: $dim;
 }
 
 // Status values
 .stat-label {
-  font-size: 7px;
+  font-size: 9px;
   letter-spacing: 1px;
   color: $dim;
 }
 
 .stat-val {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -349,7 +475,7 @@ scale slider {
 
 // Hotkeys
 .hotkey-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
@@ -378,7 +504,7 @@ scale slider {
 
 .tb-text {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
 }
 
@@ -405,22 +531,22 @@ scale slider {
 }
 
 .clock-date {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .clock-sep {
-  font-size: 9px;
+  font-size: 11px;
   color: $border-grn;
 }
 
 .clock-time {
-  font-size: 9px;
+  font-size: 11px;
   color: $orange;
   font-weight: bold;
 }
 
 .clock-loc {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
