@@ -25,7 +25,7 @@ $dead:       #1a2a10;
 // ============================================================
 * {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   color: $dim;
   background-color: $bg;
   background-image: none;
@@ -87,7 +87,7 @@ window {
 }
 
 .section-label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 2px;
   padding-bottom: 2px;
   margin-bottom: 3px;
@@ -117,27 +117,113 @@ window {
 }
 
 // ============================================================
-// LEFT PANEL — LOGS + PROCESS
+// LEFT PANEL — LOGS (60%) + PROCESS TREE (40%)
+// Phase 5: Dual-scroll layout with section headers
 // ============================================================
+
+// Log section — flexible height (vexpand fills remaining space)
+.log-section {
+  min-height: 280px;
+}
+
+.log-scroll {
+  min-height: 240px;
+}
+
 .log-container {
-  min-height: 180px;
+  padding: 2px 0;
 }
 
 .log-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $green-dim;
 }
 
+// SYSTEM_LOAD section
+.load-section {
+  padding: 4px 0;
+}
+
+.load-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 50px;
+}
+
+.load-val {
+  font-size: 11px;
+  color: $orange;
+  font-weight: bold;
+}
+
+.load-val.green {
+  color: $green;
+}
+
+// Process section
+.proc-section {
+  min-height: 200px;
+}
+
+// MEMORY_STATUS section
+.mem-section {
+  padding: 4px 0;
+}
+
+.mem-label {
+  font-size: 11px;
+  color: $dim;
+  min-width: 30px;
+}
+
+.mem-val {
+  font-size: 11px;
+  color: $blue;
+  font-weight: bold;
+}
+
+.ram-bar trough highlight {
+  background-color: $blue;
+}
+
+.swap-bar trough highlight {
+  background-color: $yellow;
+}
+
+.proc-scroll {
+  min-height: 160px;
+}
+
+.proc-container {
+  padding: 2px 0;
+}
+
 .proc-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
+}
+
+// Scrollbar styling (GTK3)
+scrollbar {
+  background-color: $bg;
+}
+
+scrollbar slider {
+  min-width: 4px;
+  min-height: 20px;
+  background-color: $border-grn;
+  border-radius: 0;
+}
+
+scrollbar slider:hover {
+  background-color: $green-dim;
 }
 
 // ============================================================
 // RIGHT PANEL
 // ============================================================
 .ascii-art {
-  font-size: 9px;
+  font-size: 11px;
   color: $orange;
   padding: 4px 2px;
   margin-bottom: 3px;
@@ -145,18 +231,18 @@ window {
 
 // Net bars
 .net-label {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
   min-width: 22px;
 }
 
 .net-val.cyan {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
 }
 
 .net-val.teal {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal-hi;
 }
 
@@ -181,7 +267,7 @@ window {
 }
 
 .diag-label {
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
 }
 
@@ -198,7 +284,7 @@ window {
 }
 
 .diag-val {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: bold;
 }
 
@@ -279,22 +365,22 @@ scale slider {
 }
 
 .ctrl-label {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .ctrl-val.on {
-  font-size: 9px;
+  font-size: 11px;
   color: $green;
 }
 
 .ctrl-val.off {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .ctrl-val.warn {
-  font-size: 9px;
+  font-size: 11px;
   color: $yellow;
 }
 
@@ -309,29 +395,29 @@ scale slider {
 }
 
 .file-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $teal;
 }
 
 .kbd-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $green;
 }
 
 .kbd-meta {
-  font-size: 8px;
+  font-size: 10px;
   color: $dim;
 }
 
 // Status values
 .stat-label {
-  font-size: 7px;
+  font-size: 9px;
   letter-spacing: 1px;
   color: $dim;
 }
 
 .stat-val {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -349,7 +435,7 @@ scale slider {
 
 // Hotkeys
 .hotkey-text {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
@@ -378,7 +464,7 @@ scale slider {
 
 .tb-text {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1px;
 }
 
@@ -405,22 +491,22 @@ scale slider {
 }
 
 .clock-date {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
 
 .clock-sep {
-  font-size: 9px;
+  font-size: 11px;
   color: $border-grn;
 }
 
 .clock-time {
-  font-size: 9px;
+  font-size: 11px;
   color: $orange;
   font-weight: bold;
 }
 
 .clock-loc {
-  font-size: 9px;
+  font-size: 11px;
   color: $dim;
 }
