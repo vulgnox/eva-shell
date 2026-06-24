@@ -134,8 +134,15 @@ window {
 }
 
 // ============================================================
-// RIGHT PANEL
+// RIGHT PANEL — Phase 6: 5 sections
 // ============================================================
+
+// ASCII_RENDER section
+.ascii-section {
+  min-height: 120px;
+  padding-bottom: 4px;
+}
+
 .ascii-art {
   font-size: 9px;
   color: $orange;
@@ -143,21 +150,43 @@ window {
   margin-bottom: 3px;
 }
 
-// Net bars
+// NET_INTERCEPT section
+.net-section {
+  padding-bottom: 4px;
+}
+
+.net-row {
+  padding: 1px 0;
+}
+
 .net-label {
   font-size: 9px;
   color: $dim;
   min-width: 22px;
 }
 
-.net-val.cyan {
+.net-val {
   font-size: 9px;
+  min-width: 40px;
+}
+
+.net-val.cyan {
   color: $teal;
 }
 
 .net-val.teal {
-  font-size: 9px;
   color: $teal-hi;
+}
+
+.net-iface {
+  font-size: 7px;
+  color: $dim;
+  padding-top: 2px;
+}
+
+// MAGI_DIAG section
+.diag-section {
+  padding-bottom: 4px;
 }
 
 // MAGI DIAG
@@ -255,7 +284,11 @@ scale slider {
   background-color: $teal-hi;
 }
 
-// Controls
+// SYS_CONTROLS section
+.ctrl-section {
+  padding-top: 4px;
+}
+
 .ctrl-row {
   padding: 2px 0;
 }

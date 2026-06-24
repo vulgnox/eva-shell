@@ -9,8 +9,10 @@
 ; POLLS — data sources
 ; ============================================================
 (defpoll magi_data   :interval "2s"  :initial "{}" `~/.config/eva-shell/scripts/magi-stats.sh`)
+(defpoll magi_diag   :interval "2s"  :initial "{}" `~/.config/eva-shell/scripts/magi-diag.sh`)
 (defpoll mel_llm     :interval "30s" :initial "Systems nominal. No anomalies detected." `~/.config/eva-shell/scripts/melchior.sh`)
 (defpoll net_data    :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/net-stats.sh`)
+(defpoll ascii_art   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/ascii-poll.sh`)
 (defpoll log_lines   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/log-poll.sh`)
 (defpoll proc_data   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/proc-poll.sh`)
 (defpoll file_list   :interval "10s" :initial "" `~/.config/eva-shell/scripts/file-poll.sh`)
@@ -37,65 +39,63 @@
              :wrap true :text proc_data))))
 
 ; ============================================================
-; RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS
+; RIGHT PANEL — 5 sections: ASCII + NET + MAGI_DIAG + CONTROLS + padding
+; Phase 6: Enhanced right flank with live data
 ; ============================================================
 (defwidget right-panel-widget []
   (box :class "panel right-panel" :orientation "v" :spacing 0
-    ; ASCII_RENDER
-    (box :class "section" :orientation "v" :spacing 0
+    ; 1. ASCII_RENDER — cycling EVA art + sync percentage
+    (box :class "section ascii-section" :orientation "v" :spacing 0
       (label :class "section-label orange" :halign "start" :text "ASCII_RENDER")
-      (label :class "ascii-art" :text "  _________
-/ ________ \\
-| U-01 NERV |
-\\ _________ /
-  99.6% SYNC"))
+      (label :class "ascii-art" :halign "center" :text ascii_art))
 
-    ; NET_INTERCEPT
-    (box :class "section" :orientation "v" :spacing 2
+    ; 2. NET_INTERCEPT — RX/TX bars with live data
+    (box :class "section net-section" :orientation "v" :spacing 2
       (label :class "section-label cyan" :halign "start" :text "NET_INTERCEPT")
-      (box :orientation "h" :spacing 4
+      (box :class "net-row" :orientation "h" :spacing 4
         (label :class "net-label" :text "RX")
         (scale :class "net-bar rx-bar"
                :value {jq(net_data, ".rx_pct") ?: 0}
                :min 0 :max 100 :active false :hexpand true)
         (label :class "net-val cyan" :text {jq(net_data, ".rx_str") ?: "--"}))
-      (box :orientation "h" :spacing 4
+      (box :class "net-row" :orientation "h" :spacing 4
         (label :class "net-label" :text "TX")
         (scale :class "net-bar tx-bar"
                :value {jq(net_data, ".tx_pct") ?: 0}
                :min 0 :max 100 :active false :hexpand true)
-        (label :class "net-val teal" :text {jq(net_data, ".tx_str") ?: "--"})))
+        (label :class "net-val teal" :text {jq(net_data, ".tx_str") ?: "--"}))
+      (label :class "net-iface" :halign "start" :text {"IFACE: ${jq(net_data, '.iface') ?: 'N/A'}"}))
 
-    ; MAGI_DIAG
-    (box :class "section" :orientation "v" :spacing 2
+    ; 3. MAGI_DIAG — CPU/RAM/Temp with colored bars (from magi-diag.sh)
+    (box :class "section diag-section" :orientation "v" :spacing 2
       (label :class "section-label orange" :halign "start" :text "MAGI_DIAG")
-      ; MELCHIOR bar
+      ; MELCHIOR — CPU
       (box :class "diag-item mel-border" :orientation "v" :spacing 1
         (label :class "diag-label mel" :halign "start" :text "MELCHIOR -- CPU")
         (box :orientation "h" :spacing 4
           (scale :class "diag-bar mel-bar"
-                 :value {jq(magi_data, ".melchior.value") ?: 0}
+                 :value {jq(magi_diag, ".mel_cpu") ?: 0}
                  :min 0 :max 100 :active false :hexpand true)
-          (label :class "diag-val mel" :text "${jq(magi_data, '.melchior.value') ?: 0}%")))
-      ; BALTHASAR bar
+          (label :class "diag-val mel" :text "${jq(magi_diag, '.mel_cpu') ?: 0}%")))
+      ; BALTHASAR — RAM
       (box :class "diag-item bal-border" :orientation "v" :spacing 1
         (label :class "diag-label bal" :halign "start" :text "BALTHASAR -- RAM")
         (box :orientation "h" :spacing 4
           (scale :class "diag-bar bal-bar"
-                 :value {jq(magi_data, ".balthasar.value") ?: 0}
+                 :value {jq(magi_diag, ".bal_ram") ?: 0}
                  :min 0 :max 100 :active false :hexpand true)
-          (label :class "diag-val bal" :text "${jq(magi_data, '.balthasar.value') ?: 0}%")))
-      ; CASPAR bar
+          (label :class "diag-val bal" :text "${jq(magi_diag, '.bal_ram') ?: 0}%")))
+      ; CASPAR — TEMP
       (box :class "diag-item cas-border" :orientation "v" :spacing 1
         (label :class "diag-label cas" :halign "start" :text "CASPAR -- TEMP")
         (box :orientation "h" :spacing 4
           (scale :class "diag-bar cas-bar"
-                 :value {jq(magi_data, ".caspar.value") ?: 0}
+                 :value {jq(magi_diag, ".cas_temp") ?: 0}
                  :min 0 :max 100 :active false :hexpand true)
-          (label :class "diag-val cas" :text "${jq(magi_data, '.caspar.value') ?: 0}C"))))
+          (label :class "diag-val cas" :text "${jq(magi_diag, '.cas_temp') ?: 0}C"))))
 
-    ; SYS_CONTROLS
-    (box :class "section" :orientation "v" :spacing 2 :vexpand true
+    ; 4. SYS_CONTROLS — Wi-Fi/Bluetooth/Audio/Battery status
+    (box :class "section ctrl-section" :orientation "v" :spacing 2 :vexpand true
       (label :class "section-label orange" :halign "start" :text "SYS_CONTROLS")
       (box :class "ctrl-row" :orientation "h" :spacing 4
         (box :class "ctrl-dot on")
