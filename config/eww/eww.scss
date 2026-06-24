@@ -465,13 +465,12 @@ scale slider {
   color: $orange;
 }
 
-.llm-box { background: $bg; padding: 4px; }
+.llm-box { background-color: $bg; padding: 4px; }
 .llm-timestamp { font-size: 5px; color: $dim; letter-spacing: 1px; margin-bottom: 2px; }
 .llm-text {
   font-size: 7px;
   color: $teal;
-  line-height: 1.4;
-  // blinking cursor via pseudo (eww limitation: use label after text)
+  // line-height not supported in GTK3 CSS
 }
 
 // ============================================================
