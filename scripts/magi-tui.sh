@@ -39,6 +39,9 @@ if [ -n "$SVG_CONVERTER" ] && [ "$TERM" = "xterm-kitty" ]; then
     USE_IMAGE=true
 fi
 
+# Pre-generate separator line (max 300 chars)
+SEP_LINE=$(printf '─%.0s' {1..300})
+
 draw_bar() {
     local val=$1 max=$2 width=$3 color=$4
     local filled=$(( val * width / max ))
@@ -51,76 +54,83 @@ draw_bar() {
 }
 
 clear
+MEL_OUT=""
+MEL_LAST=0
 
 while true; do
-    printf '\033[H'
-
-    # --- Gather system data ---
-    CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print int($2+$4)}')
-    MEM_USED=$(free -m | awk '/Mem:/{print $3}')
-    MEM_TOTAL=$(free -m | awk '/Mem:/{print $2}')
-    MEM_PCT=$(( MEM_USED * 100 / MEM_TOTAL ))
-    TEMP=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null \
-           | awk '{printf "%.0f",$1/1000}')
-    [ -z "$TEMP" ] && TEMP=$(sensors 2>/dev/null \
-           | grep -oP '\+\K[0-9]+(?=\.[0-9]+°C)' | head -1)
-    [ -z "$TEMP" ] && TEMP="--"
-    UPTIME=$(uptime -p | sed 's/up //')
+    COLS=$(tput cols)
+    ROWS=$(tput lines)
     TIME=$(date '+%H:%M:%S')
     DATE=$(date '+%Y.%m.%d')
-    COLS=$(tput cols)
+    UPTIME=$(uptime -p | sed 's/up //')
+    NOW=$SECONDS
 
-    # --- SVG Image mode ---
+    # ── SVG Image mode ─────────────────────────────────────
     if $USE_IMAGE; then
         SVG_PATH=$("$SCRIPT_DIR/magi-ring.sh" 2>/dev/null)
 
         if [ -f "$SVG_PATH" ]; then
             if [ "$SVG_CONVERTER" = "rsvg-convert" ]; then
-                rsvg-convert -w 600 -h 300 "$SVG_PATH" -o "$PNG_FILE" 2>/dev/null
+                rsvg-convert -w 1200 -h 600 "$SVG_PATH" -o "$PNG_FILE" 2>/dev/null
             else
-                convert -background black "$SVG_PATH" "$PNG_FILE" 2>/dev/null
+                convert -background black -resize 1200x600 "$SVG_PATH" "$PNG_FILE" 2>/dev/null
             fi
-            kitty +kitten icat --clear 2>/dev/null
-            kitty +kitten icat --transfer-mode file "$PNG_FILE" 2>/dev/null
+
+            # Image fills top area; leave 6 rows for text below
+            IMG_W=$((COLS - 2))
+            IMG_H=$((ROWS - 6))
+            [ $IMG_H -lt 4 ] && IMG_H=4
+
+            # Delete old images via kitty graphics protocol, then place new
+            printf '\033_Ga=d,d=A;\033\\'
+            kitty +kitten icat --place ${IMG_W}x${IMG_H}@1x0 \
+                --transfer-mode file "$PNG_FILE" 2>/dev/null
         fi
 
-        # Compact status line below image
-        printf "\033[K\n"
-        printf "  ${GD}${DATE}${RS}  ${DM}//${RS}  ${GR}${BD}${TIME}${RS}"
-        printf "  ${DM}//${RS}  ${DM}TOKYO-3 // GEO-FRONT${RS}"
-        printf "  ${DM}//${RS}  ${OR}${BD}UPTIME: ${GR}${UPTIME}${RS}\033[K\n"
+        # Text area: fixed rows at bottom
+        TR=$((ROWS - 5))
+        printf "\033[${TR};1H"
+        printf "  ${DM}${SEP_LINE:0:$((COLS-4))}${RS}\033[K\n"
+        printf "  ${GD}${DATE}${RS} ${DM}//${RS} ${GR}${BD}${TIME}${RS}"
+        printf " ${DM}//${RS} ${DM}TOKYO-3 // GEO-FRONT${RS}"
+        printf " ${DM}//${RS} ${OR}${BD}UPTIME: ${GR}${UPTIME}${RS}\033[K\n"
 
-    # --- Text-only fallback ---
+    # ── Text-only fallback ─────────────────────────────────
     else
+        CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print int($2+$4)}')
+        MEM_USED=$(free -m | awk '/Mem:/{print $3}')
+        MEM_TOTAL=$(free -m | awk '/Mem:/{print $2}')
+        MEM_PCT=$(( MEM_USED * 100 / MEM_TOTAL ))
+        TEMP=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null \
+               | awk '{printf "%.0f",$1/1000}')
+        [ -z "$TEMP" ] && TEMP=$(sensors 2>/dev/null \
+               | grep -oP '\+\K[0-9]+(?=\.[0-9]+°C)' | head -1)
+        [ -z "$TEMP" ] && TEMP="--"
+
+        printf '\033[H'
         GAP=$(( COLS - 56 ))
         [ $GAP -lt 0 ] && GAP=0
 
-        # Header boxes
         printf "${OR}${BD}"
         printf "  ┌─────────────────┐%*s┌──────────────────┐\033[K\n" $GAP ""
         printf "  │ DANANG TYPE-B   │%*s│ TIME TO COLLAPSE │\033[K\n" $GAP ""
         printf "  │ ${YL}NO. 666${OR}         │%*s│ ${GR}%-16s${OR} │\033[K\n" $GAP "" "$UPTIME"
         printf "  └─────────────────┘%*s└──────────────────┘${RS}\033[K\n" $GAP ""
 
-        # Title
         CENTER_PAD=$(( (COLS - 30) / 2 ))
         [ $CENTER_PAD -lt 0 ] && CENTER_PAD=0
         printf "\033[K\n"
         printf "%*s${OR}${BD}MAGI -- 01${RS}\033[K\n" $CENTER_PAD ""
         printf "%*s${GD}on MAGI-01 ORIGINAL${RS}\033[K\n" $(( CENTER_PAD - 4 )) ""
-
-        # Consensus
         printf "%*s${GR}● ${GD}MEL  ${GR}● ${GD}BAL  ${GR}● ${GD}CAS  ${GR}3/3 CONSENSUS${RS}\033[K\n" $(( CENTER_PAD - 8 )) ""
         printf "\033[K\n"
 
-        # MAGI Units
         printf "  ${BL}${BD}MELCHIOR${RS} ${DM}CEREBRUM//LLM${RS}"
         printf "%*s" $(( COLS / 3 - 26 )) ""
         printf "${OR}${BD}BALTHASAR${RS} ${DM}CALLOSUM//MEM${RS}"
         printf "%*s" $(( COLS / 3 - 26 )) ""
         printf "${TL}${BD}CASPAR${RS} ${DM}MEDULLA//ENV${RS}\033[K\n"
 
-        # Bars
         BAR_W=$(( COLS / 3 - 12 ))
         [ $BAR_W -gt 30 ] && BAR_W=30
         [ $BAR_W -lt 5 ] && BAR_W=5
@@ -137,22 +147,21 @@ while true; do
         printf " ${TL}%s°C${RS}\033[K\n" "$TEMP"
         printf "\033[K\n"
 
-        # Clock
         printf "  ${GD}${DATE}${RS}  ${DM}//${RS}  ${GR}${BD}${TIME}${RS}  ${DM}//${RS}  ${DM}TOKYO-3 // GEO-FRONT${RS}\033[K\n"
-
-        # Diamond
         printf "\033[K\n"
         printf "%*s${OR}◆ MAGI 01 ◆${RS}\033[K\n" $(( (COLS - 11) / 2 )) ""
     fi
 
-    # --- LLM status (shared between modes) ---
-    if [ -z "$MEL_OUT" ] || [ $(( SECONDS % 30 )) -eq 0 ]; then
+    # ── MELCHIOR LLM analysis (shared) — refresh every 30s ──
+    if [ -z "$MEL_OUT" ] || [ $((NOW - MEL_LAST)) -ge 30 ]; then
         MEL_OUT=$("$SCRIPT_DIR/melchior.sh" 2>/dev/null | head -1)
-        [ -z "$MEL_OUT" ] && MEL_OUT="Systems nominal. No anomalies detected."
+        [ -z "$MEL_OUT" ] && MEL_OUT="[BLUE] All MAGI units in consensus. System harmonics stable. No pattern detected."
+        MEL_LAST=$NOW
     fi
     printf "\033[K\n"
-    printf "  ${BL}MELCHIOR // LLM ANALYSIS:${RS}\033[K\n"
-    printf "  ${TL}%-$((COLS - 4))s${RS}\033[K\n" "$MEL_OUT"
+    printf "  ${BL}${BD}MELCHIOR // LLM ANALYSIS:${RS}\033[K\n"
+    MAX_LEN=$((COLS - 4))
+    printf "  ${TL}%-${MAX_LEN}.${MAX_LEN}s${RS}\033[K\n" "$MEL_OUT"
 
     printf '\033[J'
     sleep 2
