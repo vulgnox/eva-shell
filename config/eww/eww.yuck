@@ -12,7 +12,7 @@
 (defpoll mel_llm     :interval "30s" :initial "Systems nominal. No anomalies detected." `~/.config/eva-shell/scripts/melchior.sh`)
 (defpoll net_data    :interval "3s"  :initial "{}" `~/.config/eva-shell/scripts/net-stats.sh`)
 (defpoll log_lines   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/log-poll.sh`)
-(defpoll proc_data   :interval "3s"  :initial "" `~/.config/eva-shell/scripts/proc-poll.sh`)
+(defpoll proc_data   :interval "2s"  :initial "" `~/.config/eva-shell/scripts/process-tree.sh`)
 (defpoll file_list   :interval "10s" :initial "" `~/.config/eva-shell/scripts/file-poll.sh`)
 (defpoll kbd_data    :interval "1s"  :initial "" `~/.config/eva-shell/scripts/kbd-poll.sh`)
 (defpoll clock_time  :interval "1s"  :initial "00:00:00" `date '+%H:%M:%S'`)
@@ -20,21 +20,25 @@
 (defpoll uptime_str  :interval "30s" :initial "--" `uptime -p | sed 's/up //'`)
 
 ; ============================================================
-; LEFT PANEL — SYS_LOG_STREAM + PROCESS_TREE
+; LEFT PANEL — SYS_LOG_STREAM (60%) + PROCESS_TREE (40%)
+; Dual-scroll layout with section headers
 ; ============================================================
 (defwidget left-panel-widget []
   (box :class "panel left-panel" :orientation "v" :spacing 0
-    ; SYS_LOG_STREAM
-    (box :class "section" :orientation "v" :spacing 0 :vexpand true
+    ; SYS_LOG_STREAM — top 60%
+    (box :class "section log-section" :orientation "v" :spacing 0 :vexpand true
       (label :class "section-label green" :halign "start" :text "SYS_LOG_STREAM")
-      (box :class "log-container" :orientation "v" :vexpand true
-        (label :class "log-text" :halign "start" :valign "start"
-               :wrap true :text log_lines)))
-    ; PROCESS_TREE
-    (box :class "section" :orientation "v" :spacing 2
-      (label :class "section-label cyan" :halign "start" :text "PROCESS_TREE")
-      (label :class "proc-text" :halign "start" :valign "start"
-             :wrap true :text proc_data))))
+      (scroll :class "log-scroll" :vexpand true :vscroll true :hscroll false
+        (box :class "log-container" :orientation "v"
+          (label :class "log-text" :halign "start" :valign "start"
+                 :wrap true :text log_lines))))
+    ; PROCESS_TREE — bottom 40%
+    (box :class "section proc-section" :orientation "v" :spacing 0
+      (label :class "section-label orange" :halign "start" :text "PROCESS_TREE")
+      (scroll :class "proc-scroll" :vscroll true :hscroll false
+        (box :class "proc-container" :orientation "v"
+          (label :class "proc-text" :halign "start" :valign "start"
+                 :wrap true :text proc_data))))))
 
 ; ============================================================
 ; RIGHT PANEL — ASCII + NET + MAGI_DIAG + CONTROLS

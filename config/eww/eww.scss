@@ -117,10 +117,21 @@ window {
 }
 
 // ============================================================
-// LEFT PANEL — LOGS + PROCESS
+// LEFT PANEL — LOGS (60%) + PROCESS TREE (40%)
+// Phase 5: Dual-scroll layout with section headers
 // ============================================================
+
+// Log section — takes 60% of left panel height
+.log-section {
+  min-height: 520px;
+}
+
+.log-scroll {
+  min-height: 480px;
+}
+
 .log-container {
-  min-height: 180px;
+  padding: 2px 0;
 }
 
 .log-text {
@@ -128,9 +139,38 @@ window {
   color: $green-dim;
 }
 
+// Process section — takes 40% of left panel height
+.proc-section {
+  min-height: 340px;
+}
+
+.proc-scroll {
+  min-height: 300px;
+}
+
+.proc-container {
+  padding: 2px 0;
+}
+
 .proc-text {
   font-size: 9px;
   color: $teal;
+}
+
+// Scrollbar styling (GTK3)
+scrollbar {
+  background-color: $bg;
+}
+
+scrollbar slider {
+  min-width: 4px;
+  min-height: 20px;
+  background-color: $border-grn;
+  border-radius: 0;
+}
+
+scrollbar slider:hover {
+  background-color: $green-dim;
 }
 
 // ============================================================
